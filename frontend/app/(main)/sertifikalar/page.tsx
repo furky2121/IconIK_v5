@@ -1,10 +1,7 @@
 'use client';
-import dynamic from 'next/dynamic';
 
-const Sertifikalar = dynamic(() => import('../../../src/pages/Sertifikalar'), { ssr: false });
+import Sertifikalar from '../../../src/pages/Sertifikalar';
 
-const SertifikalarPage = () => {
+export default function SertifikalarPage() {
     return <Sertifikalar />;
-};
-
-export default SertifikalarPage;
+}

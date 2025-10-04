@@ -7,11 +7,6 @@ interface AppLayoutProps {
     children: React.ReactNode;
 }
 
-// Force dynamic rendering to prevent Calendar locale errors during build
-// This prevents static generation of pages with Calendar components
-export const dynamic = 'force-dynamic';
-
-// Separate viewport from metadata (required when using dynamic config)
 export const viewport: Viewport = {
     initialScale: 1,
     width: 'device-width'

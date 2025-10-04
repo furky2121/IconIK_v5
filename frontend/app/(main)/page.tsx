@@ -1,24 +1,5 @@
-import dynamic from 'next/dynamic';
+import { redirect } from 'next/navigation';
 
-// Dynamic import to prevent SSR issues
-const Dashboard = dynamic(() => import('../../src/pages/Dashboard'), {
-    ssr: false,
-    loading: () => (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-            fontSize: '1.2rem',
-            color: '#666'
-        }}>
-            Yükleniyor...
-        </div>
-    )
-});
-
-const DashboardPage = () => {
-    return <Dashboard />;
-};
-
-export default DashboardPage;
+export default function HomePage() {
+    redirect('/dashboard');
+}
