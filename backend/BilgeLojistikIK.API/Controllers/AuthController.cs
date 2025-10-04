@@ -336,7 +336,8 @@ namespace BilgeLojistikIK.API.Controllers
         private string GenerateJwtToken(Kullanici kullanici)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["SecretKey"];
+            // Production için environment variable'dan oku, yoksa config'den al
+            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? jwtSettings["SecretKey"];
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];
             var expirationHours = int.Parse(jwtSettings["ExpirationHours"] ?? "8");
