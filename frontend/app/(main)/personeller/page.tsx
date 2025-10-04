@@ -1,10 +1,7 @@
+'use client';
+
 import Personeller from '../../../src/pages/Personeller';
 
-// Force dynamic rendering to prevent Calendar locale errors during build
-export const dynamic = 'force-dynamic';
-
-const PersonellerPage = () => {
+export default function PersonellerPage() {
     return <Personeller />;
-};
-
-export default PersonellerPage;
+}

@@ -1,7 +1,6 @@
-import IsIlanlari from '../../../src/pages/IsIlanlari';
+'use client';
 
-// Force dynamic rendering to prevent Calendar locale errors during build
-export const dynamic = 'force-dynamic';
+import IsIlanlari from '../../../src/pages/IsIlanlari';
 
 export default function IsIlanlariPage() {
     return <IsIlanlari />;
