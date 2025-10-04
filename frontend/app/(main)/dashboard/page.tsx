@@ -1,5 +1,3 @@
-'use client';
-
 import dynamic from 'next/dynamic';
 
 // Dynamic import to prevent SSR issues with Dashboard
