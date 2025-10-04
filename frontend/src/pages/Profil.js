@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
 import { TabView, TabPanel } from 'primereact/tabview';
