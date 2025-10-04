@@ -27,7 +27,6 @@ import { Message } from 'primereact/message';
 import authService from '../services/authService';
 import ApiService from '../services/api';
 import fileUploadService from '../services/fileUploadService';
-import './Profil.css';
 
 const Profil = () => {
     const [kullanici, setKullanici] = useState(null);

@@ -20,7 +20,6 @@ import { Timeline } from 'primereact/timeline';
 import axios from 'axios';
 import api from '../services/api';
 import authService from '../services/authService';
-import './Dashboard.css';
 
 const Dashboard = () => {
     const [genelIstatistikler, setGenelIstatistikler] = useState(null);

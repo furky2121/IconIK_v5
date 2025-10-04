@@ -1,5 +1,7 @@
 import { Metadata, Viewport } from 'next';
 import Layout from '../../layout/layout';
+import '../../src/pages/Dashboard.css';
+import '../../src/pages/Profil.css';
 
 interface AppLayoutProps {
     children: React.ReactNode;
