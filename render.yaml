@@ -17,9 +17,9 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: FRONTEND_URL
-        value: https://your-app.vercel.app
+        value: https://hr-management-v3.vercel.app
       - key: ADDITIONAL_CORS_ORIGINS
-        value: https://your-app-git-main.vercel.app
+        value: https://hr-management-v3-git-main.vercel.app
 
 # PostgreSQL database
 databases:
