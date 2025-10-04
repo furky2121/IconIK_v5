@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -328,7 +330,7 @@ const IsIlanlari = () => {
                 placeholder="Tarih"
                 mask="99/99/9999"
                 showIcon
-                locale="tr"
+                firstDayOfWeek={1}
                 className="p-column-filter"
                 style={{
                     width: '85%',
@@ -712,7 +714,7 @@ const IsIlanlari = () => {
                             onChange={(e) => onDateChange(e, 'yayinTarihi')}
                             showIcon
                             dateFormat="dd/mm/yy"
-                            locale="tr"
+                            firstDayOfWeek={1}
                         />
                     </div>
                     <div className="field col">
@@ -723,7 +725,7 @@ const IsIlanlari = () => {
                             onChange={(e) => onDateChange(e, 'bitisTarihi')}
                             showIcon
                             dateFormat="dd/mm/yy"
-                            locale="tr"
+                            firstDayOfWeek={1}
                         />
                     </div>
                 </div>

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -896,7 +898,7 @@ const Personeller = () => {
                 placeholder="Tarih"
                 mask="99/99/9999"
                 showIcon
-                locale="tr"
+                firstDayOfWeek={1}
                 className="p-column-filter"
                 style={{
                     width: '85%',
@@ -1272,7 +1274,7 @@ const Personeller = () => {
                                             value={personel.dogumTarihi}
                                             onChange={(e) => onDateChange(e, 'dogumTarihi')}
                                             dateFormat="dd/mm/yy"
-                                            locale="tr"
+                                            firstDayOfWeek={1}
                                             placeholder="dd/mm/yyyy"
                                             showIcon
                                         />
@@ -1408,7 +1410,7 @@ const Personeller = () => {
                                             value={personel.iseBaslamaTarihi}
                                             onChange={(e) => onDateChange(e, 'iseBaslamaTarihi')}
                                             dateFormat="dd/mm/yy"
-                                            locale="tr"
+                                            firstDayOfWeek={1}
                                             placeholder="dd/mm/yyyy"
                                             showIcon
                                             required
@@ -1425,7 +1427,7 @@ const Personeller = () => {
                                             value={personel.cikisTarihi}
                                             onChange={(e) => onDateChange(e, 'cikisTarihi')}
                                             dateFormat="dd/mm/yy"
-                                            locale="tr"
+                                            firstDayOfWeek={1}
                                             placeholder="dd/mm/yyyy"
                                             showIcon
                                         />
