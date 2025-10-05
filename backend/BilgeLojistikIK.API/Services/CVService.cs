@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 using BilgeLojistikIK.API.Data;
 using BilgeLojistikIK.API.Models;
 using System.Text;
@@ -19,13 +18,11 @@ namespace BilgeLojistikIK.API.Services
     {
         private readonly BilgeLojistikIKContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CVService(BilgeLojistikIKContext context, IWebHostEnvironment webHostEnvironment, IHttpContextAccessor httpContextAccessor)
+        public CVService(BilgeLojistikIKContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<string> OtomatikCVOlustur(int adayId)
@@ -194,7 +191,7 @@ namespace BilgeLojistikIK.API.Services
                 // Fotoğraf yolunu backend server'dan erişilebilir hale getir
                 var fotografUrl = aday.FotografYolu.StartsWith("http")
                     ? aday.FotografYolu
-                    : GetBaseUrl() + aday.FotografYolu.TrimStart('/');
+                    : $"http://localhost:5000/{aday.FotografYolu.TrimStart('/')}";
                 html.AppendLine($"                <img src='{fotografUrl}' alt='Profil Fotoğrafı' class='profile-photo' />");
             }
             else
@@ -1028,20 +1025,6 @@ namespace BilgeLojistikIK.API.Services
                     }
                 }
             ";
-        }
-
-        private string GetBaseUrl()
-        {
-            var request = _httpContextAccessor.HttpContext?.Request;
-            if (request == null)
-            {
-                // Fallback for cases where HttpContext is not available (e.g., background jobs)
-                return "http://localhost:5000/";
-            }
-
-            var scheme = request.Scheme; // http or https
-            var host = request.Host.Value; // hostname with port if not default
-            return $"{scheme}://{host}/";
         }
     }
 }
