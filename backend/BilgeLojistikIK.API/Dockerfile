@@ -21,7 +21,10 @@ COPY --from=publish /app/publish .
 # Create uploads directory structure
 RUN mkdir -p wwwroot/uploads/avatars && \
     mkdir -p wwwroot/uploads/documents && \
-    mkdir -p wwwroot/uploads/videos
+    mkdir -p wwwroot/uploads/videos && \
+    mkdir -p wwwroot/uploads/aday-fotograflar && \
+    mkdir -p wwwroot/uploads/cv && \
+    mkdir -p wwwroot/uploads/receipts
 
 # Set permissions
 RUN chmod -R 755 wwwroot
