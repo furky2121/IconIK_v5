@@ -69,6 +69,9 @@ builder.Services.AddDbContext<BilgeLojistikIKContext>(options =>
     options.UseNpgsql(connectionString,
         o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
+// Add HttpContextAccessor for accessing request information in services
+builder.Services.AddHttpContextAccessor();
+
 // Add Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IIzinService, IzinService>();
