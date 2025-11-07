@@ -16,10 +16,14 @@
           property: connectionString
       - key: JWT_SECRET_KEY
         generateValue: true
+      - key: JWT_ISSUER
+        value: IconIKIK
+      - key: JWT_AUDIENCE
+        value: IconIKIK-Users
       - key: FRONTEND_URL
-        value: https://hr-management-v3.vercel.app
+        value: http://localhost:3000
       - key: ADDITIONAL_CORS_ORIGINS
-        value: https://hr-management-v3-git-main.vercel.app
+        value: https://localhost:3001
 
 # PostgreSQL database
 databases:
