@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IconIK.API.Migrations
 {
     [DbContext(typeof(IconIKContext))]
-    [Migration("20250905131941_AvansVeIstifaTablolarý")]
-    partial class AvansVeIstifaTablolarý
+    [Migration("20250905131941_AvansVeIstifaTablolari")]
+    partial class AvansVeIstifaTablolari
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -373,7 +373,7 @@ namespace IconIK.API.Migrations
 
                     b.ToTable("izin_talepleri", t =>
                         {
-                            t.HasCheckConstraint("CK_IzinTalebi_Durum", "durum IN ('Beklemede', 'Onaylandý', 'Reddedildi')");
+                            t.HasCheckConstraint("CK_IzinTalebi_Durum", "durum IN ('Beklemede', 'Onaylandï¿½', 'Reddedildi')");
                         });
                 });
 

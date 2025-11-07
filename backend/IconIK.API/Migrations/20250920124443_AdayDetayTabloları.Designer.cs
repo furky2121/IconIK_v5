@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IconIK.API.Migrations
 {
     [DbContext(typeof(IconIKContext))]
-    [Migration("20250920124443_AdayDetayTablolarý")]
-    partial class AdayDetayTablolarý
+    [Migration("20250920124443_AdayDetayTablolari")]
+    partial class AdayDetayTablolari
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,7 +220,7 @@ namespace IconIK.API.Migrations
 
                     b.ToTable("aday_cv", t =>
                         {
-                            t.HasCheckConstraint("CK_AdayCV_CVTipi", "cv_tipi IN ('Otomatik', 'Yuklenmiþ')");
+                            t.HasCheckConstraint("CK_AdayCV_CVTipi", "cv_tipi IN ('Otomatik', 'Yuklenmiï¿½')");
                         });
                 });
 
@@ -1270,7 +1270,7 @@ namespace IconIK.API.Migrations
 
                     b.ToTable("izin_talepleri", t =>
                         {
-                            t.HasCheckConstraint("CK_IzinTalebi_Durum", "durum IN ('Beklemede', 'Onaylandý', 'Reddedildi')");
+                            t.HasCheckConstraint("CK_IzinTalebi_Durum", "durum IN ('Beklemede', 'Onaylandï¿½', 'Reddedildi')");
                         });
                 });
 

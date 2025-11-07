@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IconIK.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AvansVeIstifaTablolarý : Migration
+    public partial class AvansVeIstifaTablolari : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
