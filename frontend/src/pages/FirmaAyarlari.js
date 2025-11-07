@@ -148,7 +148,7 @@ const FirmaAyarlari = () => {
 
     const getLogoUrl = () => {
         if (!logoUrl) return null;
-        const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const apiBaseUrl = process.env.NEXT_PUBLIC_FILE_BASE_URL || 'http://localhost:5000';
         return `${apiBaseUrl}${logoUrl}`;
     };
 
