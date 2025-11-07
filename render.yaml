@@ -24,6 +24,6 @@
 # PostgreSQL database
 databases:
   - name: IconIK-db
-    databaseName: IconIKdb
-    user: IconIK
+    databaseName: iconikdb
+    user: iconik
     plan: free
