@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    /* Prevent cursor blinking on click - but allow text selection */
+    caret-color: transparent;
 }
 
 html {
@@ -15,6 +17,19 @@ body {
     min-height: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* Restore caret for input elements only */
+input,
+textarea,
+[contenteditable="true"],
+.p-inputtext,
+.p-inputtextarea,
+.p-editor-content,
+.p-dropdown-filter,
+.p-calendar input,
+.p-multiselect-filter {
+    caret-color: auto !important;
 }
 
 a {

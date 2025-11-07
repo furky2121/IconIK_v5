@@ -68,16 +68,16 @@ const TeklifYonetimi = () => {
         try {
             const response = await basvuruService.getAll();
             if (response.success) {
-                console.log('Başvuru API Response:', response.data);
-                console.log('İlk başvuru örneği:', response.data[0]);
+            // console.log('Başvuru API Response:', response.data);
+            // console.log('İlk başvuru örneği:', response.data[0]);
 
                 // Sadece mülakat tamamlanmış başvuruları filtrele ve dropdown için format düzenle
                 const uygunBasvurular = response.data
                     .filter(b => b.durum === 'MulakatTamamlandi' || b.durum === 4 || b.durum === '4')
                     .map(b => {
-                        console.log('Başvuru objesi:', b);
-                        console.log('Aday adı alanları:', { adayAdi: b.adayAdi, AdayAd: b.AdayAd, field4: b[4] });
-                        console.log('İlan başlığı alanları:', { ilanBasligi: b.ilanBasligi, IlanBaslik: b.IlanBaslik, field1: b[1] });
+            // console.log('Başvuru objesi:', b);
+            // console.log('Aday adı alanları:', { adayAdi: b.adayAdi, AdayAd: b.AdayAd, field4: b[4] });
+            // console.log('İlan başlığı alanları:', { ilanBasligi: b.ilanBasligi, IlanBaslik: b.IlanBaslik, field1: b[1] });
 
                         return {
                             ...b,
@@ -87,7 +87,7 @@ const TeklifYonetimi = () => {
                 setBasvurular(uygunBasvurular);
             }
         } catch (error) {
-            console.error('Başvurular yüklenirken hata:', error);
+            // console.error('Başvurular yüklenirken hata:', error);
         }
     };
 

@@ -1,10 +1,10 @@
-# CLAUDE.md
+﻿# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-BilgeLojistik İK Yönetim Sistemi - Enterprise HR management system with:
+IconIK İK Yönetim Sistemi - Enterprise HR management system with:
 - **Backend**: ASP.NET Core 8.0 Web API with Entity Framework Core and PostgreSQL
 - **Frontend**: Next.js 14.2 with React 18 and PrimeReact UI components (Sakai Theme v10.1.0)
 - **Database**: PostgreSQL with relational data model and comprehensive sample data
@@ -14,7 +14,7 @@ BilgeLojistik İK Yönetim Sistemi - Enterprise HR management system with:
 
 ### Backend (.NET Core API)
 ```bash
-cd backend/BilgeLojistikIK.API
+cd backend/IconIK.API
 dotnet restore                  # Restore packages
 dotnet build                     # Build the project
 dotnet run                       # Runs on http://localhost:5000 (default)
@@ -44,14 +44,14 @@ npm run format                   # Prettier formatting
 ```bash
 # Create database
 psql -U postgres
-CREATE DATABASE "BilgeLojistikIKdb";
+CREATE DATABASE "IconIKdb";
 \q
 
 # Apply schema and sample data
-psql -d BilgeLojistikIKdb -f backend/BilgeLojistikIK.API/SQL/BilgeLojistikIKdb_Setup.sql
+psql -d IconIKdb -f backend/IconIK.API/SQL/IconIKdb_Setup.sql
 
 # For migrations (alternative to SQL script)
-cd backend/BilgeLojistikIK.API
+cd backend/IconIK.API
 dotnet ef database update
 ```
 
@@ -212,11 +212,11 @@ Aday (1) → (N) AdayHobi
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=BilgeLojistikIKdb;Username=postgres;Password=yourpassword"
+    "DefaultConnection": "Host=localhost;Port=5432;Database=IconIKdb;Username=postgres;Password=yourpassword"
   },
   "Jwt": {
     "Key": "your-secret-key-min-32-characters",
-    "Issuer": "BilgeLojistikIK",
+    "Issuer": "IconIKIK",
     "ExpireHours": 8
   }
 }
@@ -309,7 +309,7 @@ When testing CRUD operations:
 
 ### Adding New Entity
 1. Create model in `Models/` with audit fields
-2. Add DbSet to `BilgeLojistikIKContext`
+2. Add DbSet to `IconIKContext`
 3. Create controller with standard CRUD and `/Aktif` endpoint
 4. Add service in frontend `src/services/`
 5. Create page component in `src/pages/`
@@ -325,7 +325,7 @@ When testing CRUD operations:
 
 ### Database Migration
 ```bash
-cd backend/BilgeLojistikIK.API
+cd backend/IconIK.API
 dotnet ef migrations add [DescriptiveName]
 dotnet ef database update
 # If rollback needed:

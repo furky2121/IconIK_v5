@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
   trailingSlash: false,
   // Disable strict mode to avoid findDOMNode deprecation warnings from react-transition-group
@@ -61,7 +61,7 @@ const nextConfig = {
   images: {
     domains: [
       'localhost',
-      'bilgelojistik-api.onrender.com'
+      'IconIK-api.onrender.com'
     ],
     formats: ['image/webp', 'image/avif'],
   },

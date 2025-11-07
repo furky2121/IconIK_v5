@@ -1,11 +1,11 @@
-#!/bin/bash
+﻿#!/bin/bash
 
-# BilgeLojistik İK Production Deployment Script
+# IconIK İK Production Deployment Script
 # Bu script production ortamına deployment yapmak için kullanılır
 
 set -e
 
-echo "🚀 BilgeLojistik İK Production Deployment Başlatılıyor..."
+echo "🚀 IconIK İK Production Deployment Başlatılıyor..."
 
 # Renk kodları
 RED='\033[0;31m'
@@ -81,7 +81,7 @@ fi
 
 # Database bağlantı testi
 echo -e "${YELLOW}🔍 Database bağlantısı test ediliyor...${NC}"
-if docker-compose exec -T postgres pg_isready -U bilgeik -d BilgeLojistikIKdb &> /dev/null; then
+if docker-compose exec -T postgres pg_isready -U bilgeik -d IconIKdb &> /dev/null; then
     echo -e "${GREEN}✅ Database bağlantısı başarılı${NC}"
 else
     echo -e "${RED}❌ Database bağlantı kontrolü başarısız${NC}"
@@ -104,4 +104,4 @@ echo -e "• Container'ları durdurmak için: docker-compose down"
 echo -e "• Database backup için: ./scripts/backup.sh"
 echo -e "• SSL sertifika kurulumu için: ./scripts/setup-ssl.sh"
 
-echo -e "\n${GREEN}✨ BilgeLojistik İK Production'da çalışıyor!${NC}"
+echo -e "\n${GREEN}✨ IconIK İK Production'da çalışıyor!${NC}"

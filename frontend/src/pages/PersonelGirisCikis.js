@@ -96,15 +96,15 @@ const PersonelGirisCikis = () => {
         try {
             setLoading(true);
             const response = await personelGirisCikisService.getAll();
-            console.log('PersonelGirisCikis Data Response:', response);
+            // console.log('PersonelGirisCikis Data Response:', response);
             if (response.success) {
                 setGirisCikislar(response.data);
-                console.log('PersonelGirisCikis Data Loaded:', response.data);
+            // console.log('PersonelGirisCikis Data Loaded:', response.data);
             } else {
                 showError('Veriler yüklenirken hata oluştu: ' + response.message);
             }
         } catch (error) {
-            console.error('PersonelGirisCikis Load Error:', error);
+            // console.error('PersonelGirisCikis Load Error:', error);
             showError('Veriler yüklenirken hata oluştu: ' + error.message);
         } finally {
             setLoading(false);
@@ -122,7 +122,7 @@ const PersonelGirisCikis = () => {
                 setPersonelListesi(personelOptions);
             }
         } catch (error) {
-            console.error('Personel listesi yüklenirken hata:', error);
+            // console.error('Personel listesi yüklenirken hata:', error);
         }
     };
 
@@ -130,10 +130,10 @@ const PersonelGirisCikis = () => {
         try {
             setDashboardLoading(true);
             const response = await personelGirisCikisService.getDashboardData();
-            console.log('Dashboard Data Response:', response);
+            // console.log('Dashboard Data Response:', response);
             if (response.success) {
                 setDashboardData(response.data);
-                console.log('Dashboard Data Loaded:', response.data);
+            // console.log('Dashboard Data Loaded:', response.data);
                 
                 // Chart data hazırla
                 const gunlukData = response.data.gunlukDagilim || [];
@@ -159,7 +159,7 @@ const PersonelGirisCikis = () => {
                 setChartData(chartData);
             }
         } catch (error) {
-            console.error('Dashboard verileri yüklenirken hata:', error);
+            // console.error('Dashboard verileri yüklenirken hata:', error);
         } finally {
             setDashboardLoading(false);
         }

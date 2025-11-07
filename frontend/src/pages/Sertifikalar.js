@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
@@ -43,7 +43,7 @@ const Sertifikalar = () => {
                 });
             }
         } catch (error) {
-            console.error('Sertifika yükleme hatası:', error);
+            // console.error('Sertifika yükleme hatası:', error);
             setSertifikalar([]);
             toast.current?.show({
                 severity: 'error',
@@ -181,7 +181,7 @@ const Sertifikalar = () => {
                 detail: 'Sertifika PDF olarak indirildi'
             });
         } catch (error) {
-            console.error('PDF oluşturma hatası:', error);
+            // console.error('PDF oluşturma hatası:', error);
             toast.current?.show({
                 severity: 'error',
                 summary: 'Hata',
@@ -340,7 +340,7 @@ const Sertifikalar = () => {
                                         <i className="pi pi-star" style={{ fontSize: '24px', color: 'white' }}></i>
                                     </div>
                                     <h2 className="text-4xl font-bold mb-2" style={{ color: '#f59e0b' }}>SERTİFİKA</h2>
-                                    <p className="text-xl">BilgeLojistik Eğitim Merkezi</p>
+                                    <p className="text-xl">IconIK Eğitim Merkezi</p>
                                 </div>
 
                                 <Divider style={{ borderColor: '#d97706' }} />

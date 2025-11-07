@@ -49,7 +49,7 @@ const IseAlimSurecleri = () => {
                 setAktifSurecler(sureclerResponse.data);
             }
         } catch (error) {
-            console.error('Veri yükleme hatası:', error);
+            // console.error('Veri yükleme hatası:', error);
             toast.current?.show({
                 severity: 'error',
                 summary: 'Hata',

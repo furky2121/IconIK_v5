@@ -129,7 +129,7 @@ const OzgecmisHavuzu = () => {
             const response = await iseAlimService.getAday(adayData.id);
             if (response.success) {
                 const fullAday = response.data;
-                console.log('Aday verisi geldi:', fullAday); // Debug için
+            // console.log('Aday verisi geldi:', fullAday); // Debug için
                 setAday({
                     ...fullAday,
                     dogumTarihi: fullAday.dogumTarihi ? new Date(fullAday.dogumTarihi) : null,
@@ -139,18 +139,17 @@ const OzgecmisHavuzu = () => {
                     yetenekler: fullAday.Yetenekler || fullAday.yetenekler || [],
                     sertifikalar: fullAday.Sertifikalar || fullAday.sertifikalar || [],
                     diller: fullAday.Diller || fullAday.diller || [],
-                    referanslar: fullAday.Referanslar || fullAday.referanslar || [],
                     referanslar: fullAday.Referanslar || fullAday.referanslar || []
                 });
-                console.log('State aday:', {
-                    egitimler: fullAday.Egitimler || fullAday.egitimler,
-                    deneyimler: fullAday.Deneyimler || fullAday.deneyimler,
-                    yetenekler: fullAday.Yetenekler || fullAday.yetenekler
-                }); // Debug için
+                // console.log('State aday:', {
+                //     egitimler: fullAday.Egitimler || fullAday.egitimler,
+                //     deneyimler: fullAday.Deneyimler || fullAday.deneyimler,
+                //     yetenekler: fullAday.Yetenekler || fullAday.yetenekler
+                // }); // Debug için
                 setAdayDialog(true);
             }
         } catch (error) {
-            console.error('Aday yükleme hatası:', error);
+            // console.error('Aday yükleme hatası:', error);
             toast.current.show({ severity: 'error', summary: 'Hata', detail: 'Aday bilgileri yüklenirken hata oluştu' });
         }
     };
@@ -440,7 +439,7 @@ const OzgecmisHavuzu = () => {
 
             html2pdf().set(opt).from(element).save();
         } catch (error) {
-            console.error('PDF indirme hatası:', error);
+            // console.error('PDF indirme hatası:', error);
             toast.current.show({
                 severity: 'error',
                 summary: 'Hata',
@@ -2328,6 +2327,8 @@ const OzgecmisHavuzu = () => {
                 header={selectedAday ? `${selectedAday.adSoyad} - CV Yönetimi` : 'CV Yönetimi'}
                 modal
                 onHide={hideCvDialog}
+                key={cvDialog ? 'cv-dialog-open' : 'cv-dialog-closed'}
+                contentStyle={{ transform: 'translateZ(0)' }}
             >
                 <div className="mb-4">
                     <div className="flex gap-2 mb-3">
@@ -2409,6 +2410,8 @@ const OzgecmisHavuzu = () => {
                 header="CV Yükle"
                 modal
                 onHide={hideCvYuklemeDialog}
+                key={cvYuklemeDialog ? 'cv-upload-open' : 'cv-upload-closed'}
+                contentStyle={{ transform: 'translateZ(0)' }}
             >
                 <div className="text-center">
                     <FileUpload
@@ -2467,6 +2470,8 @@ const OzgecmisHavuzu = () => {
                 modal
                 maximizable
                 onHide={hideCvGoruntuleDialog}
+                key={cvGoruntuleDialog ? 'cv-view-open' : 'cv-view-closed'}
+                contentStyle={{ transform: 'translateZ(0)' }}
             >
                 {cvContent ? (
                     <div dangerouslySetInnerHTML={{ __html: cvContent }} />

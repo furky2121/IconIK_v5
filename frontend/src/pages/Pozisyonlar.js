@@ -62,7 +62,7 @@ const Pozisyonlar = () => {
                 update: yetkiService.hasScreenPermission('pozisyonlar', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             // If permission loading fails, deny all permissions for safety
             setPermissions({
                 read: false,
@@ -108,7 +108,7 @@ const Pozisyonlar = () => {
                 setDepartmanlar(response.data);
             }
         } catch (error) {
-            console.error('Departmanlar yüklenirken hata:', error);
+            // console.error('Departmanlar yüklenirken hata:', error);
         }
     };
 
@@ -120,7 +120,7 @@ const Pozisyonlar = () => {
                 setKademeler(response.data);
             }
         } catch (error) {
-            console.error('Kademeler yüklenirken hata:', error);
+            // console.error('Kademeler yüklenirken hata:', error);
         }
     };
 
@@ -166,7 +166,7 @@ const Pozisyonlar = () => {
                     delete dataToSend.id; // Remove id field for new records
                 }
 
-                console.log('Pozisyon data being sent to API:', JSON.stringify(dataToSend, null, 2));
+            // console.log('Pozisyon data being sent to API:', JSON.stringify(dataToSend, null, 2));
 
                 let response;
                 if (pozisyon.id) {

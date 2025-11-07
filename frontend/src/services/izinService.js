@@ -50,6 +50,13 @@ class IzinService {
         return ApiService.delete(`/izintalebi/${id}`);
     }
 
+    async uploadRapor(id, file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return ApiService.postFormData(`/izintalebi/${id}/UploadRapor`, formData);
+    }
+
     async getIzinTakvimi(departmanId = null, kullaniciId = null) {
         let url = '/izintalebi/Takvim';
         const params = new URLSearchParams();

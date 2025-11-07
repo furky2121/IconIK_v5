@@ -40,12 +40,12 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
     // Effect to set mounted state
     useEffect(() => {
         setIsMounted(true);
-        console.log(`VideoPlayer mounted - egitim: ${egitim?.id}, personel: ${personelId}, states: isCompleted=${isCompleted}, hasShownCompletionToast=${hasShownCompletionToast}`);
+            // console.log(`VideoPlayer mounted - egitim: ${egitim?.id}, personel: ${personelId}, states: isCompleted=${isCompleted}, hasShownCompletionToast=${hasShownCompletionToast}`);
 
         // Clear any session completion data when component mounts with fresh data
         if (egitim?.id && personelId) {
             const completionKey = `video_completion_${egitim.id}_${personelId}`;
-            console.log(`Clearing session completion key: ${completionKey}`);
+            // console.log(`Clearing session completion key: ${completionKey}`);
             sessionStorage.removeItem(completionKey);
         }
 
@@ -60,22 +60,22 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
         // Detect video platform
         if (egitim?.videoUrl) {
-            console.log('🎬 VideoPlayer - Video URL detected:', egitim.videoUrl);
+            // console.log('🎬 VideoPlayer - Video URL detected:', egitim.videoUrl);
             
             if (egitim.videoUrl.includes('youtube.com') || egitim.videoUrl.includes('youtu.be')) {
-                console.log('📺 VideoPlayer - Detected YouTube video');
+            // console.log('📺 VideoPlayer - Detected YouTube video');
                 setVideoPlatform('YouTube');
                 loadYouTubeAPI();
             } else if (egitim.videoUrl.includes('vimeo.com')) {
-                console.log('📹 VideoPlayer - Detected Vimeo video');
+            // console.log('📹 VideoPlayer - Detected Vimeo video');
                 setVideoPlatform('Vimeo');
                 loadVimeoAPI();
             } else {
-                console.log('💻 VideoPlayer - Detected Local video');
+            // console.log('💻 VideoPlayer - Detected Local video');
                 setVideoPlatform('Local');
             }
         } else {
-            console.log('❌ VideoPlayer - No video URL found in egitim data');
+            // console.log('❌ VideoPlayer - No video URL found in egitim data');
         }
 
         // Load saved progress when component mounts
@@ -86,7 +86,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         return () => {
             // Save progress before component unmounts
             if (egitim?.id && personelId && watchedPercentage > 0 && !isCompleted) {
-                console.log('Component unmounting, saving current progress...');
+            // console.log('Component unmounting, saving current progress...');
                 saveCurrentProgress();
             }
 
@@ -103,7 +103,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                 try {
                     youTubePlayer.destroy();
                 } catch (error) {
-                    console.log('YouTube player cleanup error:', error);
+            // console.log('YouTube player cleanup error:', error);
                 }
             }
         };
@@ -133,7 +133,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             // For YouTube/Vimeo, give APIs time to load, then set loading false if they haven't
             const timeout = setTimeout(() => {
                 if (isLoading) {
-                    console.log(`${videoPlatform} API taking too long, removing loading state`);
+            // console.log(`${videoPlatform} API taking too long, removing loading state`);
                     setIsLoading(false);
                 }
             }, 5000); // 5 seconds timeout
@@ -154,7 +154,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                                         ? responseData.VideoIzlemeler[0] 
                                         : null);
                     
-                    console.log('Loaded izleme data:', izlemeData);
+            // console.log('Loaded izleme data:', izlemeData);
                     
                     if (izlemeData) {
                         // Set saved progress
@@ -165,7 +165,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                         setWatchedPercentage(savedPercentage);
                         if (savedTime > 0) {
                             setCurrentTime(savedTime);
-                            console.log(`Loading saved progress: ${savedPercentage}% at ${savedTime} seconds`);
+            // console.log(`Loading saved progress: ${savedPercentage}% at ${savedTime} seconds`);
                         }
 
                         // Store resume data for later use
@@ -176,18 +176,18 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                         });
 
                         // Check if video was already completed in database
-                        console.log(`Database completion status: ${dbCompletedStatus}`);
+            // console.log(`Database completion status: ${dbCompletedStatus}`);
                         if (dbCompletedStatus) {
-                            console.log('Video marked as completed in database - setting completed state');
+            // console.log('Video marked as completed in database - setting completed state');
                             setIsCompleted(true);
                             setHasShownCompletionToast(true); // Assume toast was shown before
                         } else {
-                            console.log('Video not completed in database - resetting completion state');
+            // console.log('Video not completed in database - resetting completion state');
                             setIsCompleted(false);
                             setHasShownCompletionToast(false);
                         }
                     } else {
-                        console.log('No previous watch data found for this video');
+            // console.log('No previous watch data found for this video');
                         // Reset to initial state for new video
                         setWatchedPercentage(0);
                         setCurrentTime(0);
@@ -196,7 +196,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                     }
                 }
             } catch (error) {
-                console.error('Error loading saved progress:', error);
+            // console.error('Error loading saved progress:', error);
             }
         }
     };
@@ -204,13 +204,13 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
     const loadYouTubeAPI = () => {
         if (typeof window === 'undefined') {
-            console.log('❌ Window object not available (SSR)');
+            // console.log('❌ Window object not available (SSR)');
             return;
         }
         
-        console.log('📡 Loading YouTube API...');
+            // console.log('📡 Loading YouTube API...');
         if (window.YT && window.YT.Player) {
-            console.log('✅ YouTube API already loaded');
+            // console.log('✅ YouTube API already loaded');
             setPlayerReady(true);
             return;
         }
@@ -225,7 +225,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             // Set up the callback for when API is ready with safety check
             const originalCallback = window.onYouTubeIframeAPIReady;
             window.onYouTubeIframeAPIReady = () => {
-                console.log('YouTube API loaded successfully');
+            // console.log('YouTube API loaded successfully');
                 setPlayerReady(true);
                 // Restore original callback if it existed
                 if (originalCallback && typeof originalCallback === 'function') {
@@ -236,7 +236,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             // Script already exists, check if API is ready
             const checkAPI = setInterval(() => {
                 if (window.YT && window.YT.Player) {
-                    console.log('YouTube API is ready');
+            // console.log('YouTube API is ready');
                     setPlayerReady(true);
                     clearInterval(checkAPI);
                 }
@@ -246,7 +246,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             setTimeout(() => {
                 clearInterval(checkAPI);
                 if (!playerReady) {
-                    console.log('YouTube API timeout, setting ready anyway');
+            // console.log('YouTube API timeout, setting ready anyway');
                     setPlayerReady(true);
                 }
             }, 5000);
@@ -255,7 +255,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
     const loadVimeoAPI = () => {
         if (typeof window === 'undefined') {
-            console.log('❌ Window object not available (SSR)');
+            // console.log('❌ Window object not available (SSR)');
             return;
         }
         
@@ -270,7 +270,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             script.id = 'vimeo-api';
             script.src = 'https://player.vimeo.com/api/player.js';
             script.onload = () => {
-                console.log('Vimeo API loaded successfully');
+            // console.log('Vimeo API loaded successfully');
                 setPlayerReady(true);
             };
             document.body.appendChild(script);
@@ -278,7 +278,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             // Script already exists, check if API is ready
             const checkAPI = setInterval(() => {
                 if (window.Vimeo && window.Vimeo.Player) {
-                    console.log('Vimeo API is ready');
+            // console.log('Vimeo API is ready');
                     setPlayerReady(true);
                     clearInterval(checkAPI);
                 }
@@ -288,7 +288,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             setTimeout(() => {
                 clearInterval(checkAPI);
                 if (!playerReady) {
-                    console.log('Vimeo API timeout, setting ready anyway');
+            // console.log('Vimeo API timeout, setting ready anyway');
                     setPlayerReady(true);
                 }
             }, 5000);
@@ -300,7 +300,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         if (videoRef.current) {
             const actualDuration = videoRef.current.duration;
             setDuration(actualDuration);
-            console.log(`Local video loaded - Duration: ${actualDuration} seconds`);
+            // console.log(`Local video loaded - Duration: ${actualDuration} seconds`);
         }
     };
 
@@ -316,47 +316,47 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
     };
 
     const handleTimeUpdate = () => {
-        console.log('handleTimeUpdate called!');
+            // console.log('handleTimeUpdate called!');
 
         if (videoRef.current && !videoRef.current.paused) {
             const current = videoRef.current.currentTime;
             const total = videoRef.current.duration;
 
-            console.log(`Video time update: current=${current}, total=${total}, paused=${videoRef.current.paused}`);
+            // console.log(`Video time update: current=${current}, total=${total}, paused=${videoRef.current.paused}`);
 
             if (total > 0) {
                 const progressPercent = (current / total) * 100;
                 setProgress(progressPercent);
 
-                console.log(`Progress calculation: ${progressPercent}% (current: ${current}s / total: ${total}s)`);
+            // console.log(`Progress calculation: ${progressPercent}% (current: ${current}s / total: ${total}s)`);
 
                 // For local videos, currentTime is the position, watchedPercentage tracks total watched
                 // Update watched percentage if user moved forward
                 if (progressPercent > watchedPercentage) {
-                    console.log(`Updating watched percentage from ${watchedPercentage}% to ${progressPercent}%`);
+            // console.log(`Updating watched percentage from ${watchedPercentage}% to ${progressPercent}%`);
                     setWatchedPercentage(progressPercent);
                     setCurrentTime(current); // For local videos, this represents watched time
                 }
 
                 // Check completion using the current progressPercent (not state value)
                 const requiredProgress = egitim?.izlenmeMinimum || 80;
-                console.log(`Completion check: ${Math.floor(progressPercent)}% >= ${requiredProgress}% ? ${progressPercent >= requiredProgress}, isCompleted: ${isCompleted}, hasShownCompletionToast: ${hasShownCompletionToast}`);
+            // console.log(`Completion check: ${Math.floor(progressPercent)}% >= ${requiredProgress}% ? ${progressPercent >= requiredProgress}, isCompleted: ${isCompleted}, hasShownCompletionToast: ${hasShownCompletionToast}`);
 
                 if (progressPercent >= requiredProgress && !isCompleted && !hasShownCompletionToast) {
-                    console.log(`🎉 Local video completion threshold reached: ${Math.floor(progressPercent)}% - TRIGGERING COMPLETION`);
+            // console.log(`🎉 Local video completion threshold reached: ${Math.floor(progressPercent)}% - TRIGGERING COMPLETION`);
                     handleVideoComplete();
                 }
 
                 // Auto-save progress periodically
                 if (Math.floor(current) % 30 === 0 && Math.floor(current) > 0) {
-                    console.log('Auto-saving progress...');
+            // console.log('Auto-saving progress...');
                     saveCurrentProgress();
                 }
 
-                console.log(`Local video - Position: ${Math.floor(progressPercent)}%, Watched: ${Math.floor(watchedPercentage)}%, Time: ${Math.floor(current)}s/${Math.floor(total)}s`);
+            // console.log(`Local video - Position: ${Math.floor(progressPercent)}%, Watched: ${Math.floor(watchedPercentage)}%, Time: ${Math.floor(current)}s/${Math.floor(total)}s`);
             }
         } else {
-            console.log('Video not available or paused');
+            // console.log('Video not available or paused');
         }
     };
 
@@ -364,9 +364,9 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         // For local videos, tracking is handled in handleTimeUpdate
         // For YouTube/Vimeo, tracking is handled in their respective initialization functions
         if (videoPlatform === 'Local') {
-            console.log('Local video progress tracking started via timeupdate events');
+            // console.log('Local video progress tracking started via timeupdate events');
         } else {
-            console.log(`${videoPlatform} progress tracking handled by player API`);
+            // console.log(`${videoPlatform} progress tracking handled by player API`);
         }
     };
 
@@ -382,19 +382,19 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
     };
 
     const initializeLocalVideoTracking = () => {
-        console.log('Starting local video progress tracking');
+            // console.log('Starting local video progress tracking');
         
         if (videoRef.current) {
             // For local videos, use the actual video duration once loaded
             videoRef.current.addEventListener('loadedmetadata', () => {
                 const actualDuration = videoRef.current.duration;
                 setDuration(actualDuration);
-                console.log(`Local video duration: ${actualDuration} seconds`);
+            // console.log(`Local video duration: ${actualDuration} seconds`);
                 
                 // Resume from saved position if available
                 if (savedProgress && savedProgress.currentTime > 0 && savedProgress.currentTime < actualDuration) {
                     const resumeTime = Math.min(savedProgress.currentTime, actualDuration - 10);
-                    console.log(`Resuming local video from ${resumeTime} seconds`);
+            // console.log(`Resuming local video from ${resumeTime} seconds`);
                     videoRef.current.currentTime = resumeTime;
                     setCurrentTime(savedProgress.currentTime);
                     setWatchedPercentage(savedProgress.percentage || 0);
@@ -404,39 +404,39 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             // Fallback to database duration if no video element
             const fallbackDuration = egitim?.sureDakika ? egitim.sureDakika * 60 : 300;
             setDuration(fallbackDuration);
-            console.log(`Using fallback duration: ${fallbackDuration} seconds`);
+            // console.log(`Using fallback duration: ${fallbackDuration} seconds`);
         }
     };
 
     const initializeYouTubePlayer = () => {
-        console.log('🎬 Initializing YouTube player...');
+            // console.log('🎬 Initializing YouTube player...');
         if (typeof window === 'undefined') {
-            console.error('❌ Window object not available, cannot initialize YouTube player');
+            // console.error('❌ Window object not available, cannot initialize YouTube player');
             return;
         }
         
         if (!window.YT || !window.YT.Player) {
-            console.error('❌ YouTube API not ready, using fallback iframe');
+            // console.error('❌ YouTube API not ready, using fallback iframe');
             createFallbackYouTubePlayer();
             return;
         }
 
         const videoId = getYouTubeVideoId(egitim.videoUrl);
-        console.log('🔍 Extracted YouTube video ID:', videoId);
+            // console.log('🔍 Extracted YouTube video ID:', videoId);
         if (!videoId) {
-            console.error('❌ Could not extract YouTube video ID from URL:', egitim.videoUrl);
+            // console.error('❌ Could not extract YouTube video ID from URL:', egitim.videoUrl);
             setIsLoading(false);
             return;
         }
 
-        console.log('Creating YouTube player with videoId:', videoId);
+            // console.log('Creating YouTube player with videoId:', videoId);
         
         // Clear existing player container
         const container = document.getElementById('youtube-player');
         if (container) {
             container.innerHTML = '';
         } else {
-            console.error('❌ youtube-player element not found in DOM!');
+            // console.error('❌ youtube-player element not found in DOM!');
             return;
         }
 
@@ -454,7 +454,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                 },
                 events: {
                     'onReady': (event) => {
-                        console.log('YouTube player ready');
+            // console.log('YouTube player ready');
                         
                         // Ensure iframe is visible
                         const container = document.getElementById('youtube-player');
@@ -478,7 +478,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                             '3': 'buffering',
                             '5': 'cued'
                         };
-                        console.log('YouTube state change:', states[event.data]);
+            // console.log('YouTube state change:', states[event.data]);
                         
                         if (event.data === 1) { // Playing
                             setIsPlaying(true);
@@ -488,18 +488,18 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                         } else if (event.data === 0) { // Ended
                             setIsPlaying(false);
                             if (!isCompleted && !hasShownCompletionToast) {
-                                console.log('YouTube video ended, triggering completion');
+            // console.log('YouTube video ended, triggering completion');
                                 handleVideoComplete();
                             }
                         }
                     },
                     'onError': (event) => {
-                        console.error('YouTube player error:', event.data);
+            // console.error('YouTube player error:', event.data);
                     }
                 }
             });
         } catch (error) {
-            console.error('Error creating YouTube player:', error);
+            // console.error('Error creating YouTube player:', error);
         }
     };
 
@@ -523,19 +523,19 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
     // YouTube Player event handlers
     const initializeYouTubeTracking = (player) => {
-        console.log('Initializing YouTube tracking...');
+            // console.log('Initializing YouTube tracking...');
         
         // Get actual duration from YouTube player
         const getDurationAndSetup = () => {
             const videoDuration = player.getDuration();
             if (videoDuration > 0) {
-                console.log(`YouTube video duration: ${videoDuration} seconds`);
+            // console.log(`YouTube video duration: ${videoDuration} seconds`);
                 setDuration(videoDuration);
                 
                 // Resume from saved position if available
                 if (savedProgress && savedProgress.currentTime > 0 && savedProgress.currentTime < videoDuration) {
                     const resumeTime = Math.min(savedProgress.currentTime, videoDuration - 10);
-                    console.log(`Resuming YouTube video from ${resumeTime} seconds`);
+            // console.log(`Resuming YouTube video from ${resumeTime} seconds`);
                     player.seekTo(resumeTime, true);
                     setCurrentTime(savedProgress.currentTime);
                     setWatchedPercentage(savedProgress.percentage || 0);
@@ -580,11 +580,11 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
                         // Debug completion conditions every 5%
                         if (Math.floor(calculatedWatchedPercentage) % 5 === 0 && Math.floor(calculatedWatchedPercentage) > 0) {
-                            console.log(`YouTube completion check: ${Math.floor(calculatedWatchedPercentage)}% >= ${requiredProgress}% ? ${calculatedWatchedPercentage >= requiredProgress}, isCompleted: ${isCompleted}, hasShownCompletionToast: ${hasShownCompletionToast}`);
+            // console.log(`YouTube completion check: ${Math.floor(calculatedWatchedPercentage)}% >= ${requiredProgress}% ? ${calculatedWatchedPercentage >= requiredProgress}, isCompleted: ${isCompleted}, hasShownCompletionToast: ${hasShownCompletionToast}`);
                         }
 
                         if (calculatedWatchedPercentage >= requiredProgress && !isCompleted && !hasShownCompletionToast) {
-                            console.log(`YouTube completion threshold reached: ${Math.floor(calculatedWatchedPercentage)}% - TRIGGERING COMPLETION`);
+            // console.log(`YouTube completion threshold reached: ${Math.floor(calculatedWatchedPercentage)}% - TRIGGERING COMPLETION`);
                             handleVideoComplete();
                         }
                         
@@ -594,11 +594,11 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                             lastSaveTime = currentVideoTime;
                         }
                         
-                        console.log(`YouTube - Position: ${Math.floor(currentPositionPercentage)}%, Watched: ${Math.floor(calculatedWatchedPercentage)}%, Total: ${Math.floor(totalWatchedTime)}s/${Math.floor(videoDuration)}s`);
+            // console.log(`YouTube - Position: ${Math.floor(currentPositionPercentage)}%, Watched: ${Math.floor(calculatedWatchedPercentage)}%, Total: ${Math.floor(totalWatchedTime)}s/${Math.floor(videoDuration)}s`);
                     }
                 }
             } catch (error) {
-                console.error('Error in YouTube progress update:', error);
+            // console.error('Error in YouTube progress update:', error);
             }
         };
         
@@ -608,24 +608,24 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
     const initializeVimeoPlayer = () => {
         if (typeof window === 'undefined') {
-            console.error('❌ Window object not available, cannot initialize Vimeo player');
+            // console.error('❌ Window object not available, cannot initialize Vimeo player');
             return;
         }
         
         if (!window.Vimeo || !window.Vimeo.Player) {
-            console.error('Vimeo API not ready, using fallback iframe');
+            // console.error('Vimeo API not ready, using fallback iframe');
             createFallbackVimeoPlayer();
             return;
         }
 
         const videoId = getVimeoVideoId(egitim.videoUrl);
         if (!videoId) {
-            console.error('Could not extract Vimeo video ID');
+            // console.error('Could not extract Vimeo video ID');
             setIsLoading(false);
             return;
         }
 
-        console.log('Creating Vimeo player with videoId:', videoId);
+            // console.log('Creating Vimeo player with videoId:', videoId);
         
         // Clear existing player container
         const container = document.getElementById('vimeo-player');
@@ -643,15 +643,15 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
             });
             
             player.ready().then(() => {
-                console.log('Vimeo player ready');
+            // console.log('Vimeo player ready');
                 initializeVimeoTracking(player);
                 setIsLoading(false);
             }).catch((error) => {
-                console.error('Vimeo player error:', error);
+            // console.error('Vimeo player error:', error);
                 setIsLoading(false);
             });
         } catch (error) {
-            console.error('Error creating Vimeo player:', error);
+            // console.error('Error creating Vimeo player:', error);
             setIsLoading(false);
         }
     };
@@ -676,7 +676,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
     // Vimeo Player event handlers
     const initializeVimeoTracking = (player) => {
-        console.log('Initializing Vimeo tracking...');
+            // console.log('Initializing Vimeo tracking...');
 
         let totalWatchedTime = savedProgress?.currentTime || 0;
         let lastUpdateTime = 0;
@@ -685,24 +685,24 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         
         // Get duration and setup resume
         player.getDuration().then(duration => {
-            console.log(`Vimeo video duration: ${duration} seconds`);
+            // console.log(`Vimeo video duration: ${duration} seconds`);
             setDuration(duration);
             
             // Resume from saved position if available
             if (savedProgress && savedProgress.currentTime > 0 && savedProgress.currentTime < duration) {
                 const resumeTime = Math.min(savedProgress.currentTime, duration - 10);
-                console.log(`Resuming Vimeo video from ${resumeTime} seconds`);
+            // console.log(`Resuming Vimeo video from ${resumeTime} seconds`);
                 player.setCurrentTime(resumeTime);
                 setCurrentTime(savedProgress.currentTime);
                 setWatchedPercentage(savedProgress.percentage || 0);
             }
         }).catch(error => {
-            console.error('Error getting Vimeo duration:', error);
+            // console.error('Error getting Vimeo duration:', error);
         });
         
         // Play event
         player.on('play', () => {
-            console.log('Vimeo play event');
+            // console.log('Vimeo play event');
             isPlayingState = true;
             setIsPlaying(true);
             player.getCurrentTime().then(currentTime => {
@@ -712,7 +712,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         
         // Pause event
         player.on('pause', () => {
-            console.log('Vimeo pause event');
+            // console.log('Vimeo pause event');
             isPlayingState = false;
             setIsPlaying(false);
             saveCurrentProgress();
@@ -720,11 +720,11 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         
         // Ended event
         player.on('ended', () => {
-            console.log('Vimeo ended event');
+            // console.log('Vimeo ended event');
             isPlayingState = false;
             setIsPlaying(false);
             if (!isCompleted && !hasShownCompletionToast) {
-                console.log('Vimeo video ended, triggering completion');
+            // console.log('Vimeo video ended, triggering completion');
                 handleVideoComplete();
             }
         });
@@ -757,11 +757,11 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
 
                     // Debug completion conditions every 5%
                     if (Math.floor(calculatedWatchedPercentage) % 5 === 0 && Math.floor(calculatedWatchedPercentage) > 0) {
-                        console.log(`Vimeo completion check: ${Math.floor(calculatedWatchedPercentage)}% >= ${requiredProgress}% ? ${calculatedWatchedPercentage >= requiredProgress}, isCompleted: ${isCompleted}, hasShownCompletionToast: ${hasShownCompletionToast}`);
+            // console.log(`Vimeo completion check: ${Math.floor(calculatedWatchedPercentage)}% >= ${requiredProgress}% ? ${calculatedWatchedPercentage >= requiredProgress}, isCompleted: ${isCompleted}, hasShownCompletionToast: ${hasShownCompletionToast}`);
                     }
 
                     if (calculatedWatchedPercentage >= requiredProgress && !isCompleted && !hasShownCompletionToast) {
-                        console.log(`🎉 Vimeo completion threshold reached: ${Math.floor(calculatedWatchedPercentage)}% - TRIGGERING COMPLETION`);
+            // console.log(`🎉 Vimeo completion threshold reached: ${Math.floor(calculatedWatchedPercentage)}% - TRIGGERING COMPLETION`);
                         handleVideoComplete();
                     }
                     
@@ -771,19 +771,19 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                         lastSaveTime = currentVideoTime;
                     }
                     
-                    console.log(`Vimeo - Position: ${Math.floor(currentPositionPercentage)}%, Watched: ${Math.floor(calculatedWatchedPercentage)}%, Total: ${Math.floor(totalWatchedTime)}s/${Math.floor(videoDuration)}s`);
+            // console.log(`Vimeo - Position: ${Math.floor(currentPositionPercentage)}%, Watched: ${Math.floor(calculatedWatchedPercentage)}%, Total: ${Math.floor(totalWatchedTime)}s/${Math.floor(videoDuration)}s`);
                 }
             }
         });
     };
 
     const saveCurrentProgress = async () => {
-        console.log(`Attempting to save progress - egitimId: ${egitim?.id}, personelId: ${personelId}`);
-        console.log('Egitim object:', egitim);
-        console.log('PersonelId value:', personelId);
+            // console.log(`Attempting to save progress - egitimId: ${egitim?.id}, personelId: ${personelId}`);
+            // console.log('Egitim object:', egitim);
+            // console.log('PersonelId value:', personelId);
         
         if (egitim?.id && personelId) {
-            console.log('Conditions met, preparing to save progress...');
+            // console.log('Conditions met, preparing to save progress...');
             try {
                 let progressData = {
                     videoEgitimId: egitim.id,
@@ -807,7 +807,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                     progressData.izlemeBitisSaniye = Math.round(currentTime);
                     progressData.izlemeYuzdesi = Math.floor(watchedPercentage);
                     
-                    console.log(`Saving YouTube progress: ${progressData.izlemeYuzdesi}% (${Math.round(currentTime)}s watched of ${Math.round(duration)}s)`);
+            // console.log(`Saving YouTube progress: ${progressData.izlemeYuzdesi}% (${Math.round(currentTime)}s watched of ${Math.round(duration)}s)`);
                 } else if (videoPlatform === 'Vimeo') {
                     // Vimeo progress using current state values
                     progressData.toplamIzlenenSure = Math.round(currentTime);
@@ -815,22 +815,22 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                     progressData.izlemeBitisSaniye = Math.round(currentTime);
                     progressData.izlemeYuzdesi = Math.floor(watchedPercentage);
                     
-                    console.log(`Saving Vimeo progress: ${progressData.izlemeYuzdesi}% (${Math.round(currentTime)}s watched of ${Math.round(duration)}s)`);
+            // console.log(`Saving Vimeo progress: ${progressData.izlemeYuzdesi}% (${Math.round(currentTime)}s watched of ${Math.round(duration)}s)`);
                 } else if (videoPlatform === 'Local' && videoRef.current) {
                     // Local video progress already handled above
-                    console.log(`Saving Local video progress: ${progressData.izlemeYuzdesi}% (${Math.round(currentTime)}s watched of ${Math.round(duration)}s)`);
+            // console.log(`Saving Local video progress: ${progressData.izlemeYuzdesi}% (${Math.round(currentTime)}s watched of ${Math.round(duration)}s)`);
                 }
 
                 // Use videoEgitimService instead of direct fetch
                 const result = await videoEgitimService.updateProgress(progressData);
                 
                 if (result.success) {
-                    console.log('Progress saved successfully');
+            // console.log('Progress saved successfully');
                 } else {
-                    console.error('Failed to save progress:', result.message);
+            // console.error('Failed to save progress:', result.message);
                 }
             } catch (error) {
-                console.error('Error saving progress:', error);
+            // console.error('Error saving progress:', error);
             }
         }
     };
@@ -847,7 +847,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         const handleBeforeUnload = (event) => {
             // Save progress before page unloads
             if (egitim?.id && personelId && watchedPercentage > 0 && !isCompleted) {
-                console.log('Page unloading, saving current progress...');
+            // console.log('Page unloading, saving current progress...');
                 // Use synchronous call for beforeunload to ensure it completes
                 navigator.sendBeacon && navigator.sendBeacon('/api/VideoEgitim/update-progress', JSON.stringify({
                     videoEgitimId: egitim.id,
@@ -866,7 +866,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         const handleVisibilityChange = () => {
             // Save progress when page becomes hidden
             if (document.visibilityState === 'hidden' && egitim?.id && personelId && watchedPercentage > 0 && !isCompleted) {
-                console.log('Page hidden, saving current progress...');
+            // console.log('Page hidden, saving current progress...');
                 saveCurrentProgress();
             }
         };
@@ -881,21 +881,17 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
     }, [isMounted, egitim?.id, personelId, watchedPercentage, isCompleted, currentTime, videoPlatform, duration, saveCurrentProgress]);
 
     const handleVideoComplete = async () => {
-        console.log('handleVideoComplete called!');
+            // console.log('handleVideoComplete called!');
 
         // Basic validation
         if (!egitim?.id || !personelId) {
-            console.log('Video completion blocked - missing egitim ID or personel ID:', { egitimId: egitim?.id, personelId });
+            // console.log('Video completion blocked - missing egitim ID or personel ID:', { egitimId: egitim?.id, personelId });
             return;
         }
 
         // Check if already processing or completed to prevent multiple calls
         if (isProcessingCompletion || isCompleted || hasShownCompletionToast) {
-            console.log('Video completion blocked - already processed:', {
-                isProcessingCompletion,
-                isCompleted,
-                hasShownCompletionToast
-            });
+            // console.log('Video completion blocked - already processed:', isProcessingCompletion, isCompleted, hasShownCompletionToast);
             return;
         }
 
@@ -903,11 +899,11 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
         const completionKey = `video_completion_${egitim?.id}_${personelId}`;
         const alreadyCompleted = sessionStorage.getItem(completionKey);
         if (alreadyCompleted) {
-            console.log('Video completion blocked - already completed in this session');
+            // console.log('Video completion blocked - already completed in this session');
             return;
         }
 
-        console.log('Processing video completion...');
+            // console.log('Processing video completion...');
         setIsProcessingCompletion(true);
         setIsCompleted(true);
         setHasShownCompletionToast(true);
@@ -942,7 +938,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                 tamamlandiMi: true
             };
 
-            console.log('Sending completion data:', progressData);
+            // console.log('Sending completion data:', progressData);
             await videoEgitimService.izlemeKaydet(progressData);
 
             // Clear stored progress since video is completed
@@ -960,7 +956,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                 onComplete(egitim);
             }
         } catch (error) {
-            console.error('Error completing video:', error);
+            // console.error('Error completing video:', error);
 
             // Reset completion state on error to allow retry
             setIsCompleted(false);
@@ -1048,7 +1044,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                 ></iframe>
             `;
             setIsLoading(false);
-            console.log('YouTube fallback iframe created');
+            // console.log('YouTube fallback iframe created');
         }
     };
 
@@ -1068,7 +1064,7 @@ const VideoPlayer = forwardRef(({ egitim, onComplete, onProgress, personelId }, 
                 ></iframe>
             `;
             setIsLoading(false);
-            console.log('Vimeo fallback iframe created');
+            // console.log('Vimeo fallback iframe created');
         }
     };
 

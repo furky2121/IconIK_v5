@@ -12,17 +12,13 @@ export default function HomePage() {
         const checkAuth = () => {
             try {
                 const isAuthenticated = authService.isLoggedIn();
-                console.log('HomePage - Auth check:', isAuthenticated);
-                
+
                 if (isAuthenticated) {
-                    console.log('HomePage - Kullanıcı giriş yapmış, dashboard\'a yönlendiriliyor');
                     router.replace('/dashboard');
                 } else {
-                    console.log('HomePage - Kullanıcı giriş yapmamış, login\'e yönlendiriliyor');
                     router.replace('/auth/login');
                 }
             } catch (error) {
-                console.error('HomePage - Auth check error:', error);
                 router.replace('/auth/login');
             } finally {
                 setIsChecking(false);

@@ -50,7 +50,7 @@ const IstifaOnay = () => {
                 update: yetkiService.hasScreenPermission('istifa-onay', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: false,
                 write: false,

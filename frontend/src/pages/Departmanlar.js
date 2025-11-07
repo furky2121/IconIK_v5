@@ -53,7 +53,7 @@ const Departmanlar = () => {
                 update: yetkiService.hasScreenPermission('departmanlar', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             // If permission loading fails, deny all permissions for safety
             setPermissions({
                 read: false,
@@ -112,14 +112,14 @@ const Departmanlar = () => {
                     delete dataToSend.id; // Remove id field for new records
                 }
                 
-                console.log('Sending departman data:', dataToSend);
+            // console.log('Sending departman data:', dataToSend);
                 let response;
                 if (departman.id) {
                     response = await departmanService.updateDepartman(departman.id, dataToSend);
                 } else {
                     response = await departmanService.createDepartman(dataToSend);
                 }
-                console.log('Received response:', response);
+            // console.log('Received response:', response);
 
                 if (response.success) {
                     toast.current.show({
@@ -156,23 +156,23 @@ const Departmanlar = () => {
     };
 
     const confirmDeleteDepartman = (departman) => {
-        console.log('Delete button clicked for departman:', departman);
+            // console.log('Delete button clicked for departman:', departman);
         confirmDialog({
             message: `${departman.ad} departmanını silmek istediğinizden emin misiniz?`,
             header: 'Silme Onayı',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                console.log('Delete confirmed for departman ID:', departman.id);
+            // console.log('Delete confirmed for departman ID:', departman.id);
                 deleteDepartman(departman.id);
             }
         });
     };
 
     const deleteDepartman = async (id) => {
-        console.log('deleteDepartman called with ID:', id);
+            // console.log('deleteDepartman called with ID:', id);
         try {
             const response = await departmanService.deleteDepartman(id);
-            console.log('Delete response:', response);
+            // console.log('Delete response:', response);
             if (response.success) {
                 toast.current.show({
                     severity: 'success',
@@ -183,7 +183,7 @@ const Departmanlar = () => {
                 loadDepartmanlar();
             }
         } catch (error) {
-            console.error('Delete error:', error);
+            // console.error('Delete error:', error);
             toast.current.show({
                 severity: 'error',
                 summary: 'Hata',

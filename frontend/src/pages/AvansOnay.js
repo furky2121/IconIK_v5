@@ -49,7 +49,7 @@ const AvansOnay = () => {
                 update: yetkiService.hasScreenPermission('avans-onay', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: false,
                 write: false,

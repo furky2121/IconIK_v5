@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -279,7 +279,7 @@ const PersonelZimmet = () => {
         </head>
         <body>
             <div class="header">
-                <div class="company-title">BİLGE LOJİSTİK A.Ş.</div>
+                <div class="company-title">Icon A.Ş.</div>
                 <div class="form-title">KAPSAMLI ZİMMET FORMU</div>
                 <div class="form-number">Personel: ${grupluZimmet.personelAdSoyad} | Form Tarihi: ${new Date().toLocaleDateString('tr-TR')}</div>
             </div>
@@ -370,7 +370,7 @@ const PersonelZimmet = () => {
             </div>
 
             <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #666;">
-                Bu form ${new Date().toLocaleDateString('tr-TR')} tarihinde BilgeLojistik İK Yönetim Sistemi tarafından otomatik olarak oluşturulmuştur.
+                Bu form ${new Date().toLocaleDateString('tr-TR')} tarihinde IconIK İK Yönetim Sistemi tarafından otomatik olarak oluşturulmuştur.
             </div>
 
             <script>

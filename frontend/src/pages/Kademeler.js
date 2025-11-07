@@ -53,7 +53,7 @@ const Kademeler = () => {
                 update: yetkiService.hasScreenPermission('kademeler', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             // If permission loading fails, deny all permissions for safety
             setPermissions({
                 read: false,

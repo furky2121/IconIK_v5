@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'primereact/card';
@@ -34,7 +34,6 @@ const Profil = () => {
     const [izinDetay, setIzinDetay] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [sifreDegistirDialog, setSifreDegistirDialog] = useState(false);
     const [fotografDialog, setFotografDialog] = useState(false);
     const toast = useRef(null);
 
@@ -46,12 +45,6 @@ const Profil = () => {
         fotografUrl: ''
     });
 
-    // Şifre değiştirme state'i
-    const [sifreForm, setSifreForm] = useState({
-        mevcutSifre: '',
-        yeniSifre: '',
-        yeniSifreTekrar: ''
-    });
 
     // Authentication'dan gerçek kullanıcı ID'sini al
     const currentUser = authService.getUser();
@@ -127,26 +120,6 @@ const Profil = () => {
         }
     };
 
-    const sifreDegistir = async () => {
-        if (sifreForm.yeniSifre !== sifreForm.yeniSifreTekrar) {
-            toast.current?.show({ severity: 'error', summary: 'Hata', detail: 'Yeni şifre ve tekrar şifresi uyuşmuyor.' });
-            return;
-        }
-
-        try {
-            const response = await ApiService.put(`/Profil/SifreDegistir/${kullaniciId}`, sifreForm);
-            if (response.success) {
-                toast.current?.show({ severity: 'success', summary: 'Başarılı', detail: response.message });
-                setSifreDegistirDialog(false);
-                setSifreForm({ mevcutSifre: '', yeniSifre: '', yeniSifreTekrar: '' });
-            } else {
-                toast.current?.show({ severity: 'error', summary: 'Hata', detail: response.message });
-            }
-        } catch (error) {
-            toast.current?.show({ severity: 'error', summary: 'Hata', detail: 'Şifre değiştirilemedi.' });
-        }
-    };
-
     const onUpload = async (event) => {
         const file = event.files[0];
         const formData = new FormData();
@@ -210,22 +183,6 @@ const Profil = () => {
         }
     };
 
-    const sifreDegistirDialogFooter = (
-        <div className="flex justify-content-end gap-2">
-            <Button 
-                label="İptal" 
-                icon="pi pi-times" 
-                className="p-button-text" 
-                onClick={() => setSifreDegistirDialog(false)} 
-            />
-            <Button 
-                label="Değiştir" 
-                icon="pi pi-check" 
-                onClick={sifreDegistir} 
-            />
-        </div>
-    );
-
     if (loading || !kullanici || !personelOzet || !izinDetay) {
         return (
             <div className="profil-container flex align-items-center justify-content-center" style={{ minHeight: '60vh' }}>
@@ -261,15 +218,9 @@ const Profil = () => {
                         <p className="text-600 mt-1 mb-0">Kişisel bilgilerinizi görüntüleyin ve güncelleyin</p>
                     </div>
                     <div className="flex align-items-center gap-2">
-                        <Button 
-                            label="Şifre Değiştir" 
-                            icon="pi pi-lock" 
-                            className="p-button-outlined"
-                            onClick={() => setSifreDegistirDialog(true)} 
-                        />
-                        <Button 
-                            label="Fotoğraf Değiştir" 
-                            icon="pi pi-camera" 
+                        <Button
+                            label="Fotoğraf Değiştir"
+                            icon="pi pi-camera"
                             onClick={() => setFotografDialog(true)}
                         />
                     </div>
@@ -278,7 +229,7 @@ const Profil = () => {
 
             <div className="grid">
                 {/* Sol Sidebar - Profil Kartı */}
-                <div className="col-12 lg:col-4">
+                <div className="col-12 lg:col-3 xl:col-3">
                     {/* Ana Profil Kartı */}
                     <Card className="surface-card border-round shadow-2 mb-3">
                         <div className="text-center mb-4">
@@ -297,7 +248,7 @@ const Profil = () => {
                                         fontWeight: 'bold'
                                     }}
                                     onImageError={(e) => {
-                                        console.log('Profile avatar error:', e);
+            // console.log('Profile avatar error:', e);
                                     }}
                                 />
                             </div>
@@ -314,50 +265,92 @@ const Profil = () => {
                         
                         <Divider />
                         
-                        <div className="profil-details">
-                            <div className="flex align-items-center p-3 border-bottom-1 surface-border">
-                                <i className="pi pi-envelope text-primary text-xl mr-5"></i>
-                                <div>
+                        <div className="profil-details" style={{ marginLeft: '-2rem', marginRight: '-1rem' }}>
+                            <div className="flex align-items-center py-2 pl-1 pr-3 border-bottom-1 surface-border">
+                                <i className="pi pi-envelope text-primary text-xl mr-2" style={{ width: '20px', fontSize: '1.25rem', flexShrink: 0 }}></i>
+                                <div style={{ flex: 1, minWidth: 0 }}>
                                     <small className="text-600">Email</small>
-                                    <p className="m-0 font-medium">{kullanici?.personelBilgileri?.email || 'Email belirtilmemiş'}</p>
+                                    <p className="m-0 font-medium" style={{
+                                        whiteSpace: 'nowrap'
+                                    }}>
+                                        {(() => {
+                                            const email = kullanici?.personelBilgileri?.email || 'Email belirtilmemiş';
+                                            return email.length > 40 ? email.substring(0, 40) + '...' : email;
+                                        })()}
+                                    </p>
                                 </div>
                             </div>
-                            <div className="flex align-items-center p-3 border-bottom-1 surface-border">
-                                <i className="pi pi-phone text-primary text-xl mr-5"></i>
-                                <div>
+                            <div className="flex align-items-center py-2 pl-1 pr-3 border-bottom-1 surface-border">
+                                <i className="pi pi-phone text-primary text-xl mr-2" style={{ width: '20px', fontSize: '1.25rem', flexShrink: 0 }}></i>
+                                <div style={{ flex: 1, overflow: 'hidden' }}>
                                     <small className="text-600">Telefon</small>
-                                    <p className="m-0 font-medium">{kullanici?.personelBilgileri?.telefon || 'Telefon belirtilmemiş'}</p>
+                                    <p className="m-0 font-medium" style={{
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        maxWidth: '100%'
+                                    }}>
+                                        {kullanici?.personelBilgileri?.telefon || 'Telefon belirtilmemiş'}
+                                    </p>
                                 </div>
                             </div>
-                            <div className="flex align-items-center p-3 border-bottom-1 surface-border">
-                                <i className="pi pi-calendar text-primary text-xl mr-5"></i>
-                                <div>
+                            <div className="flex align-items-center py-2 pl-1 pr-3 border-bottom-1 surface-border">
+                                <i className="pi pi-calendar text-primary text-xl mr-2" style={{ width: '20px', fontSize: '1.25rem', flexShrink: 0 }}></i>
+                                <div style={{ flex: 1, overflow: 'hidden' }}>
                                     <small className="text-600">İşe Başlama</small>
-                                    <p className="m-0 font-medium">{formatDate(kullanici?.personelBilgileri?.iseBaslamaTarihi)}</p>
+                                    <p className="m-0 font-medium" style={{
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        maxWidth: '100%'
+                                    }}>
+                                        {formatDate(kullanici?.personelBilgileri?.iseBaslamaTarihi)}
+                                    </p>
                                 </div>
                             </div>
                             {kullanici?.personelBilgileri?.yoneticiAd && (
-                                <div className="flex align-items-center p-3 border-bottom-1 surface-border">
-                                    <i className="pi pi-user text-primary text-xl mr-3"></i>
-                                    <div>
+                                <div className="flex align-items-center py-2 pl-1 pr-3 border-bottom-1 surface-border">
+                                    <i className="pi pi-user text-primary text-xl mr-2" style={{ width: '20px', fontSize: '1.25rem', flexShrink: 0 }}></i>
+                                    <div style={{ flex: 1, overflow: 'hidden' }}>
                                         <small className="text-600">Yönetici</small>
-                                        <p className="m-0 font-medium">{kullanici.personelBilgileri.yoneticiAd}</p>
+                                        <p className="m-0 font-medium" style={{
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                            maxWidth: '100%'
+                                        }}>
+                                            {kullanici.personelBilgileri.yoneticiAd}
+                                        </p>
                                     </div>
                                 </div>
                             )}
-                            <div className="flex align-items-center p-3">
-                                <i className="pi pi-shield text-primary text-xl mr-3"></i>
-                                <div>
+                            <div className="flex align-items-center py-2 pl-1 pr-3 border-bottom-1 surface-border">
+                                <i className="pi pi-shield text-primary text-xl mr-2" style={{ width: '20px', fontSize: '1.25rem', flexShrink: 0 }}></i>
+                                <div style={{ flex: 1, overflow: 'hidden' }}>
                                     <small className="text-600">Sistem Rolü</small>
-                                    <p className="m-0 font-medium">{kullanici?.rol || 'Personel'}</p>
+                                    <p className="m-0 font-medium" style={{
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        maxWidth: '100%'
+                                    }}>
+                                        {kullanici?.rol || 'Personel'}
+                                    </p>
                                 </div>
                             </div>
                             {izinDetay && (
-                                <div className="flex align-items-center p-3">
-                                    <i className="pi pi-calendar-plus text-primary text-xl mr-3"></i>
-                                    <div>
+                                <div className="flex align-items-center py-2 pl-1 pr-3">
+                                    <i className="pi pi-calendar-plus text-primary text-xl mr-2" style={{ width: '20px', fontSize: '1.25rem', flexShrink: 0 }}></i>
+                                    <div style={{ flex: 1, overflow: 'hidden' }}>
                                         <small className="text-600">Çalışma Yılı</small>
-                                        <p className="m-0 font-medium">{izinDetay.calismaYili + 1}. yıl</p>
+                                        <p className="m-0 font-medium" style={{
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                            maxWidth: '100%'
+                                        }}>
+                                            {izinDetay.calismaYili + 1}. yıl
+                                        </p>
                                     </div>
                                 </div>
                             )}
@@ -367,7 +360,7 @@ const Profil = () => {
                 </div>
 
                 {/* Ana İçerik - Modern Tab Yapısı */}
-                <div className="col-12 lg:col-8">
+                <div className="col-12 lg:col-9 xl:col-9">
                     <Card className="surface-card border-round shadow-2">
                         <TabView 
                             activeIndex={activeIndex} 
@@ -403,10 +396,10 @@ const Profil = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-6 md:col-3">
-                                                    <div className="bg-purple-50 border-round p-4 text-center h-full">
-                                                        <i className="pi pi-users text-4xl text-purple-500 mb-3"></i>
-                                                        <h3 className="text-2xl font-bold text-purple-700 m-0">{personelOzet.altCalisanSayisi}</h3>
-                                                        <p className="text-purple-600 font-medium mt-1 mb-0">Alt Çalışan</p>
+                                                    <div className="bg-blue-50 border-round p-4 text-center h-full">
+                                                        <i className="pi pi-users text-4xl text-blue-500 mb-3"></i>
+                                                        <h3 className="text-2xl font-bold text-blue-700 m-0">{personelOzet.altCalisanSayisi}</h3>
+                                                        <p className="text-blue-600 font-medium mt-1 mb-0">Alt Çalışan</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -524,7 +517,7 @@ const Profil = () => {
                                                 value={profilForm.email} 
                                                 onChange={(e) => setProfilForm({...profilForm, email: e.target.value})}
                                                 className="w-full p-3 border-round"
-                                                placeholder="ornek@bilgelojistik.com"
+                                                placeholder="ornek@IconIK.com"
                                             />
                                         </div>
                                     </div>
@@ -608,22 +601,22 @@ const Profil = () => {
                                         </div>
                                         
                                         {/* Başarı Puanı */}
-                                        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-round-lg p-6 text-center">
+                                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-round-lg p-6 text-center">
                                             <h4 className="text-xl font-semibold text-900 mb-4">Genel Başarı Puanınız</h4>
-                                            
+
                                             <div className="flex align-items-center justify-content-center gap-4 mb-4">
-                                                <Knob 
-                                                    value={(personelOzet.egitimOzeti.ortalamaPuan / 5) * 100} 
+                                                <Knob
+                                                    value={(personelOzet.egitimOzeti.ortalamaPuan / 5) * 100}
                                                     size={100}
                                                     strokeWidth={8}
-                                                    valueColor="#8b5cf6"
+                                                    valueColor="#3b82f6"
                                                     rangeColor="#e5e7eb"
                                                     textColor="#374151"
                                                     valueTemplate="{value}%"
                                                     className="mr-4"
                                                 />
                                                 <div className="text-left">
-                                                    <div className="text-3xl font-bold text-purple-700 mb-1">
+                                                    <div className="text-3xl font-bold text-blue-700 mb-1">
                                                         {personelOzet.egitimOzeti.ortalamaPuan.toFixed(1)}
                                                         <span className="text-lg text-600 ml-1">/ 5.0</span>
                                                     </div>
@@ -709,12 +702,12 @@ const Profil = () => {
                                                 </div>
                                             </div>
                                             <div className="col-6 md:col-3">
-                                                <div className="bg-purple-50 border-round-lg p-4 text-center h-full">
-                                                    <i className="pi pi-clock text-purple-500 text-3xl mb-3"></i>
-                                                    <div className="text-2xl font-bold text-purple-700">
+                                                <div className="bg-blue-50 border-round-lg p-4 text-center h-full">
+                                                    <i className="pi pi-clock text-blue-500 text-3xl mb-3"></i>
+                                                    <div className="text-2xl font-bold text-blue-700">
                                                         {izinDetay.bekleyenIzin}
                                                     </div>
-                                                    <div className="text-purple-600 font-medium">Bekleyen Talep</div>
+                                                    <div className="text-blue-600 font-medium">Bekleyen Talep</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -732,50 +725,6 @@ const Profil = () => {
                     </Card>
                 </div>
             </div>
-
-            {/* Şifre Değiştir Dialog */}
-            <Dialog 
-                visible={sifreDegistirDialog} 
-                style={{ width: '400px' }} 
-                header="Şifre Değiştir" 
-                modal 
-                footer={sifreDegistirDialogFooter} 
-                onHide={() => setSifreDegistirDialog(false)}
-            >
-                <div className="grid">
-                    <div className="col-12">
-                        <label htmlFor="mevcutSifre">Mevcut Şifre</label>
-                        <Password 
-                            id="mevcutSifre"
-                            value={sifreForm.mevcutSifre} 
-                            onChange={(e) => setSifreForm({...sifreForm, mevcutSifre: e.target.value})}
-                            feedback={false}
-                            className="w-full"
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label htmlFor="yeniSifre">Yeni Şifre</label>
-                        <Password 
-                            id="yeniSifre"
-                            value={sifreForm.yeniSifre} 
-                            onChange={(e) => setSifreForm({...sifreForm, yeniSifre: e.target.value})}
-                            className="w-full"
-                        />
-                    </div>
-                    
-                    <div className="col-12">
-                        <label htmlFor="yeniSifreTekrar">Yeni Şifre Tekrar</label>
-                        <Password 
-                            id="yeniSifreTekrar"
-                            value={sifreForm.yeniSifreTekrar} 
-                            onChange={(e) => setSifreForm({...sifreForm, yeniSifreTekrar: e.target.value})}
-                            feedback={false}
-                            className="w-full"
-                        />
-                    </div>
-                </div>
-            </Dialog>
 
             {/* Fotoğraf Yükleme Dialog */}
             <Dialog 

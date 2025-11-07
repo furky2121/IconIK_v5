@@ -1,4 +1,4 @@
-# 🏢 BilgeLojistik İK Yönetim Sistemi
+﻿# 🏢 IconIK İK Yönetim Sistemi
 
 Modern ve kapsamlı İnsan Kaynakları yönetim sistemi.
 
@@ -98,7 +98,7 @@ Modern ve kapsamlı İnsan Kaynakları yönetim sistemi.
 
 ### Backend (ASP.NET Core 8.0)
 ```
-backend/BilgeLojistikIK.API/
+backend/IconIK.API/
 ├── Controllers/           # API Controller'ları
 │   ├── KademeController.cs
 │   ├── DepartmanController.cs  
@@ -124,12 +124,12 @@ backend/BilgeLojistikIK.API/
 │   ├── EkranYetkisi.cs          # YENİ: Ekran yetkileri
 │   └── KademeEkranYetkisi.cs    # YENİ: Kademe-ekran yetki matrisi
 ├── Data/                # Entity Framework Context
-│   └── BilgeLojistikIKContext.cs
+│   └── IconIKContext.cs
 ├── Services/            # İş mantığı servisları
 │   ├── UserService.cs
 │   └── IzinService.cs
 └── SQL/                # Veritabanı script'leri
-    └── BilgeLojistikIKdb_Setup.sql
+    └── IconIKdb_Setup.sql
 ```
 
 ### Frontend (React + PrimeReact)
@@ -172,16 +172,16 @@ frontend/src/
 ```bash
 # PostgreSQL'e bağlan ve veritabanı oluştur
 psql -U postgres
-CREATE DATABASE "BilgeLojistikIKdb";
+CREATE DATABASE "IconIKdb";
 \q
 
 # Demo verilerle birlikte tabloları oluştur
-psql -d BilgeLojistikIKdb -f BilgeLojistikIKdb_Setup.sql
+psql -d IconIKdb -f IconIKdb_Setup.sql
 ```
 
 ### **🖥️ 2. Backend API Başlatma**
 ```bash
-cd backend/BilgeLojistikIK.API
+cd backend/IconIK.API
 dotnet restore
 dotnet build
 dotnet run  # http://localhost:5000 adresinde çalışır
@@ -362,7 +362,7 @@ EkranYetkisi (1) → (N) KademeEkranYetkisi # YENİ: Ekran yetkileri
 Bu proje MIT lisansı altında geliştirilmiştir.
 
 ## 👨‍💻 Geliştirici
-BilgeLojistik İK Yönetim Sistemi v1.0
+IconIK İK Yönetim Sistemi v1.0
 Geliştirme Tarihi: 2024
 
 ---

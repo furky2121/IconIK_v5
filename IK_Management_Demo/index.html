@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iconIK İK Yönetim Sistemi - Sunum</title>
+    <link rel="stylesheet" href="assets/css/presentation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button id="prevBtn" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+        <span id="slideCounter" class="slide-counter">1 / 15</span>
+        <button id="nextBtn" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- Slide Container -->
+    <div class="presentation-container">
+
+        <!-- Slide 1: Kapak Slaytı -->
+        <section class="slide active" data-slide="1">
+            <div class="slide-content cover-slide">
+                <div class="logo-container">
+                    <img src="img/logo.png" alt="iconIK Logo" class="company-logo">
+                </div>
+                <h1 class="hero-title">İnsan Kaynaklarınızı<br>Geleceğe Taşıyın</h1>
+                <p class="hero-subtitle">Dijital dönüşümle İK süreçlerinizi hızlandırın,<br>maliyetlerinizi azaltın, verimliliğinizi artırın</p>
+                <div class="hero-badge">Enterprise İK Yönetim Platformu</div>
+                <p style="margin-top: 2rem; font-size: 0.9rem; color: #ffffff;">LionSoft Technology tarafından geliştirilmiştir</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: İşletme Zorlukları -->
+        <section class="slide" data-slide="2">
+            <div class="slide-content">
+                <h2 class="slide-title">İK Departmanınız Bu Zorluklarla<br>Mücadele Ediyor mu?</h2>
+                <div class="challenges-grid">
+                    <div class="challenge-card">
+                        <div class="challenge-number">1</div>
+                        <div class="challenge-content">
+                            <h3>Zaman Kaybı</h3>
+                            <p class="stat-highlight">Günde 3-4 saat</p>
+                            <p>manuel veri girişi ve evrak işi</p>
+                        </div>
+                    </div>
+                    <div class="challenge-card">
+                        <div class="challenge-number">2</div>
+                        <div class="challenge-content">
+                            <h3>Yüksek Hata Oranı</h3>
+                            <p class="stat-highlight">%15-20</p>
+                            <p>ek maliyet insan hataları nedeniyle</p>
+                        </div>
+                    </div>
+                    <div class="challenge-card">
+                        <div class="challenge-number">3</div>
+                        <div class="challenge-content">
+                            <h3>Yavaş Onay Süreçleri</h3>
+                            <p class="stat-highlight">5-7 gün</p>
+                            <p>izin, avans ve masraf onayları için</p>
+                        </div>
+                    </div>
+                    <div class="challenge-card">
+                        <div class="challenge-number">4</div>
+                        <div class="challenge-content">
+                            <h3>Görünürlük Eksikliği</h3>
+                            <p class="stat-highlight">Anlık veri yok</p>
+                            <p>stratejik karar almak için</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="pain-point">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p><strong>Sonuç:</strong> Düşük verimlilik, artan maliyetler ve mutsuz çalışanlar</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: Çözüm & Değer Önerisi -->
+        <section class="slide" data-slide="3">
+            <div class="slide-content">
+                <h2 class="slide-title">Neden iconIK İK Yönetim Sistemi?</h2>
+                <div class="value-props">
+                    <div class="value-hero">
+                        <img src="img/login.png" alt="Platform Görseli" class="hero-image">
+                    </div>
+                    <div class="value-list">
+                        <div class="value-item">
+                            <div class="value-icon success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div>
+                                <h3>Tek Platform, Tüm Süreçler</h3>
+                                <p>İşe alımdan çıkışa kadar tüm İK operasyonlarınızı tek yerden yönetin</p>
+                            </div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-icon primary">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <h3>Hızlı Kurulum & Kullanım</h3>
+                                <p>Karmaşık teknik bilgi gerektirmez, dakikalar içinde başlayın</p>
+                            </div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-icon warning">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <h3>Güvenli & Uyumlu</h3>
+                                <p>İş kanunu, SGK ve KVKK mevzuatlarına tam uyumlu</p>
+                            </div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-icon info">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div>
+                                <h3>Her Yerden Erişim</h3>
+                                <p>Masaüstü, tablet ve mobil cihazlardan kesintisiz çalışın</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: ROI & İş Faydaları -->
+        <section class="slide" data-slide="4">
+            <div class="slide-content">
+                <h2 class="slide-title">Yatırımınızın Karşılığını Hemen Görün</h2>
+                <div class="roi-highlight-center">
+                    <i class="fas fa-trophy" style="font-size: 2.5rem; color: #10b981; margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #334155;">Geri Ödeme Süresi</h3>
+                    <div class="roi-big-number" style="font-size: 4rem; font-weight: 800; color: #10b981; margin-bottom: 0.5rem;">6 AY</div>
+                    <p style="color: #64748b; font-size: 1.1rem;">Ortalama yatırım geri dönüş süresi</p>
+                </div>
+                <div class="roi-metrics-grid">
+                    <div class="metric-box">
+                        <i class="fas fa-clock metric-icon"></i>
+                        <div class="metric-value">%65</div>
+                        <div class="metric-label">Zaman Tasarrufu</div>
+                        <p>İK ekibiniz stratejik işlere odaklanır</p>
+                    </div>
+                    <div class="metric-box">
+                        <i class="fas fa-dollar-sign metric-icon"></i>
+                        <div class="metric-value">%60</div>
+                        <div class="metric-label">Maliyet Azaltma</div>
+                        <p>Manuel işçilik ve hata maliyetlerinde</p>
+                    </div>
+                    <div class="metric-box">
+                        <i class="fas fa-chart-line metric-icon"></i>
+                        <div class="metric-value">%80</div>
+                        <div class="metric-label">Hata Azaltma</div>
+                        <p>Otomatik kontroller ile sıfır hata</p>
+                    </div>
+                </div>
+                <div class="benefits-summary">
+                    <div class="benefit-pill">
+                        <i class="fas fa-check"></i>
+                        <span>Bordro hazırlama süresi %75 azalır</span>
+                    </div>
+                    <div class="benefit-pill">
+                        <i class="fas fa-check"></i>
+                        <span>Onay süreçleri 5 günden 1 güne iner</span>
+                    </div>
+                    <div class="benefit-pill">
+                        <i class="fas fa-check"></i>
+                        <span>Çalışan memnuniyeti belirgin artar</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Platform Genel Bakış -->
+        <section class="slide" data-slide="5">
+            <div class="slide-content">
+                <h2 class="slide-title">Kapsamlı İK Çözümü</h2>
+                <div class="platform-overview">
+                    <div class="modules-grid">
+                        <div class="module-item">
+                            <i class="fas fa-user-plus"></i>
+                            <span>İşe Alım & CV Havuzu</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-users"></i>
+                            <span>Personel Yönetimi</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>İzin Yönetimi</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Eğitim & Gelişim</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Bordro</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-box"></i>
+                            <span>Zimmet Yönetimi</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-box"></i>
+                            <span>Avans & Masraf</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-box"></i>
+                            <span>Anket Yönetimi</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-box"></i>
+                            <span>Personel Giriş/Çıkış Yönetimi</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Raporlama</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Anlık Bildirimler</span>
+                        </div>
+                        <div class="module-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Yetki Yönetimi</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="platform-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="12+">0</div>
+                        <div class="stat-text">Entegre Modül</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="50+">0</div>
+                        <div class="stat-text">Otomatik İş Akışı</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="20+">0</div>
+                        <div class="stat-text">Rapor Şablonu</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: İşe Alımdan Çıkışa Tam Döngü -->
+        <section class="slide" data-slide="6">
+            <div class="slide-content">
+                <h2 class="slide-title">İşe Alımdan Çıkışa<br>Tam Çalışan Yaşam Döngüsü</h2>
+                <div class="lifecycle-container">
+                    <img src="img/ise_alim.png" alt="Çalışan Yaşam Döngüsü" class="lifecycle-image">
+                    <div class="lifecycle-stages">
+                        <div class="stage">
+                            <div class="stage-icon">1</div>
+                            <h3>İşe Alım</h3>
+                            <p>İlan yayınlama, başvuru toplama, mülakat yönetimi, teklif gönderimi</p>
+                            <div class="stage-benefit">%40 daha hızlı işe alım</div>
+                        </div>
+                        <div class="stage">
+                            <div class="stage-icon">2</div>
+                            <h3>Onboarding</h3>
+                            <p>Otomatik hesap oluşturma, zimmet atama, ilk gün hazırlık</p>
+                            <div class="stage-benefit">İlk gün deneyimi</div>
+                        </div>
+                        <div class="stage">
+                            <div class="stage-icon">3</div>
+                            <h3>Gelişim</h3>
+                            <p>Eğitim programları, performans takibi, kariyer planlama</p>
+                            <div class="stage-benefit">Yetenek gelişimi</div>
+                        </div>
+                        <div class="stage">
+                            <div class="stage-icon">4</div>
+                            <h3>Çıkış</h3>
+                            <p>İstifa yönetimi, exit interview, zimmet iadesi, hesap kapatma</p>
+                            <div class="stage-benefit">Düzenli süreç</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Personel & İzin Yönetimi -->
+        <section class="slide" data-slide="7">
+            <div class="slide-content">
+                <h2 class="slide-title">Personel ve İzin İşlemlerinde<br>Tam Otomasyon</h2>
+                <div class="two-col-feature">
+                    <div class="feature-visual">
+                        <img src="img/izin_takvim.png" alt="Personel Yönetimi" class="feature-image">
+                    </div>
+                    <div class="feature-details">
+                        <div class="feature-block">
+                            <h3><i class="fas fa-users"></i> Personel Yönetimi</h3>
+                            <ul class="feature-list">
+                                <li>İzinli personellerin takvimde görünmesi</li>
+                                <li>Ay-Yıl ve Departman bazında filtreleme</li>
+                                <li>Personel izin detay görüntüleme</li>
+                                <li>Daha efektif izin planlamaları</li>
+                            </ul>
+                            <div class="impact-badge success">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Personel işlemleri 10 dakikaya iner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="two-col-feature" style="margin-top: 2rem;">
+                    <div class="feature-visual">
+                        <img src="img/izin_takvim2.png" alt="İzin Yönetimi" class="feature-image">
+                    </div>
+                    <div class="feature-details">
+                        <div class="feature-block">
+                            <h3><i class="fas fa-calendar-alt"></i> İzin Yönetimi</h3>
+                            <ul class="feature-list">
+                                <li>Otomatik izin hakkı hesaplama</li>
+                                <li>Çok seviyeli onay süreçleri</li>
+                                <li>Takvim görünümü ve çakışma kontrolü</li>
+                                <li>Anlık bildirimler ve hatırlatmalar</li>
+                            </ul>
+                            <div class="impact-badge warning">
+                                <i class="fas fa-bolt"></i>
+                                <span>Onay süresi 5 günden 1 saate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Eğitim & Gelişim -->
+        <section class="slide" data-slide="8">
+            <div class="slide-content">
+                <h2 class="slide-title">Yeteneklerinizi Geliştirin,<br>Şirketinizi Büyütün</h2>
+                <div class="training-showcase">
+                    <div class="training-hero">
+                        <img src="img/egitim.png" alt="Eğitim Platformu" class="showcase-image">
+                    </div>
+                    <div class="training-features">
+                        <div class="training-card">
+                            <i class="fas fa-video"></i>
+                            <h3>Video Eğitim Platformu</h3>
+                            <p>Çalışanlarınıza Vimeo/YouTube platformlarından yüklediğiniz videoları atayabilir, eğitim maliyetinizi düşürebilirsiniz</p>
+                        </div>
+                        <div class="training-card">
+                            <i class="fas fa-certificate"></i>
+                            <h3>Otomatik Sertifika</h3>
+                            <p>Eğitim tamamlandığında dijital sertifikalar otomatik oluşturulur</p>
+                        </div>
+                        <div class="training-card">
+                            <i class="fas fa-chart-pie"></i>
+                            <h3>İlerleme Takibi</h3>
+                            <p>Yöneticiler ekiplerinin gelişimini anlık izler</p>
+                        </div>
+                        <div class="training-card">
+                            <i class="fas fa-users-cog"></i>
+                            <h3>Yetenek Matrisi</h3>
+                            <p>Organizasyonunuzdaki yetenek ve beceri haritasını görün</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="training-impact">
+                    <p><i class="fas fa-trophy"></i> <strong>Sonuç:</strong> Daha yetkin ekipler, daha iyi performans</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Finansal İşlemler -->
+        <section class="slide" data-slide="9">
+            <div class="slide-content">
+                <h2 class="slide-title">Finansal İşlemlerde<br>Hata Payı Sıfır</h2>
+                <div class="financial-grid">
+                    <div class="financial-card">
+                        <div class="card-header">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <h3>Bordro Yönetimi</h3>
+                        </div>
+                        <img src="img/payroll.png" alt="Bordro" class="card-image">
+                        <ul class="card-benefits">
+                            <li>Otomatik SGK ve vergi hesaplama</li>
+                            <li>Toplu bordro hazırlama</li>
+                            <li>E-bordro gönderimi</li>
+                            <li>Avans kesinti entegrasyonu</li>
+                        </ul>
+                        <div class="card-impact">%75 daha hızlı</div>
+                    </div>
+                    <div class="financial-card">
+                        <div class="card-header">
+                            <i class="fas fa-hand-holding-usd"></i>
+                            <h3>Avans Yönetimi</h3>
+                        </div>
+                        <img src="img/avans.png" alt="Avans" class="card-image">
+                        <ul class="card-benefits">
+                            <li>Online avans talebi</li>
+                            <li>Otomatik limit kontrolü</li>
+                            <li>Taksit planı oluşturma</li>
+                            <li>Bordroya otomatik yansıma</li>
+                        </ul>
+                        <div class="card-impact">Anında onay</div>
+                    </div>
+                    <div class="financial-card">
+                        <div class="card-header">
+                            <i class="fas fa-receipt"></i>
+                            <h3>Masraf Yönetimi</h3>
+                        </div>
+                        <img src="img/masraf.png" alt="Masraf" class="card-image">
+                        <ul class="card-benefits">
+                            <li>Mobil fiş yükleme</li>
+                            <li>Kategori bazlı takip</li>
+                            <li>Hızlı onay süreci</li>
+                            <li>Otomatik raporlama</li>
+                        </ul>
+                        <div class="card-impact">Şeffaf süreç</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Dashboard & Karar Desteği -->
+        <section class="slide" data-slide="10">
+            <div class="slide-content">
+                <h2 class="slide-title">Veriye Dayalı Kararlar Alın</h2>
+                <div class="dashboard-showcase">
+                    <div class="dashboard-main">
+                        <img src="img/dashboard.png" alt="Dashboard" class="dashboard-image">
+                    </div>
+                    <div class="dashboard-insights">
+                        <h3>Yönetici Dashboard'unda:</h3>
+                        <div class="insight-grid">
+                            <div class="insight-card">
+                                <i class="fas fa-users"></i>
+                                <div class="insight-content">
+                                    <h4>Personel Analitiği</h4>
+                                    <p>Departman dağılımı, devir oranı, ortalama çalışma süresi</p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <i class="fas fa-chart-line"></i>
+                                <div class="insight-content">
+                                    <h4>Maliyet Analizi</h4>
+                                    <p>Bordro, avans, masraf giderlerini anlık görün</p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <i class="fas fa-calendar-check"></i>
+                                <div class="insight-content">
+                                    <h4>İzin İstatistikleri</h4>
+                                    <p>Kullanılan, kalan izinler ve trend analizi</p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <i class="fas fa-graduation-cap"></i>
+                                <div class="insight-content">
+                                    <h4>Eğitim ROI</h4>
+                                    <p>Eğitim yatırımlarınızın getirisini ölçün</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="export-banner">
+                            <i class="fas fa-file-download"></i>
+                            <span>Tüm raporlar Excel ve PDF formatında export edilebilir</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Müşteri Başarı Hikayeleri -->
+        <section class="slide" data-slide="12">
+            <div class="slide-content">
+                <h2 class="slide-title">Müşterilerimiz Ne Diyor?</h2>
+                <div class="testimonials">
+                    <div class="testimonial-card featured">
+                        <div class="quote-mark">"</div>
+                        <p class="testimonial-text">iconIK İK Yönetim sayesinde personel işlemlerimizi <strong>%70 daha hızlı</strong> tamamlıyoruz. İK ekibimiz artık stratejik projelere odaklanabiliyor.</p>
+                        <div class="testimonial-author">
+                            <img src="img/hacievliyagil_holding_logo.jpg" alt="Referans" class="author-photo">
+                            <div class="author-info">
+                                <div class="author-name">Emre Hacıevliyagil</div>
+                                <div class="author-title">Yönetim Kurulu Başkanı</div>
+                                <div class="author-company">Hacıevliyagil Holding • 500+ Çalışan</div>
+                            </div>
+                        </div>
+                        <div class="testimonial-stats">
+                            <div class="stat-badge">%70 Hız</div>
+                            <div class="stat-badge">4 Ay</div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="quote-mark">"</div>
+                        <p class="testimonial-text">Bordro hazırlama süremiz 5 günden 1 güne düştü. Hata oranımız neredeyse sıfırlandı.</p>
+                        <div class="testimonial-author">
+                            <div class="author-info">
+                                <div class="author-name">Akgün A.Ş.</div>
+                                <div class="author-title">Finans Müdürü</div>
+                                <div class="author-company">Üretim A.Ş.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="quote-mark">"</div>
+                        <p class="testimonial-text">Çalışan memnuniyetimiz arttı. Personellerimiz kendi işlemlerini hızlıca yapabiliyor.</p>
+                        <div class="testimonial-author">
+                            <div class="author-info">
+                                <div class="author-name">Hasan Akgün</div>
+                                <div class="author-title">Genel Müdür</div>
+                                <div class="author-company">Akgün A.Ş.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="success-stats">
+                    <div class="success-stat">
+                        <div class="success-number" data-target="1">2</div>
+                        <div class="success-label">Mutlu Müşteri</div>
+                    </div>
+                    <div class="success-stat">
+                        <div class="success-number" data-target="75">115</div>
+                        <div class="success-label">Aktif Kullanıcı</div>
+                    </div>
+                    <div class="success-stat">
+                        <div class="success-number">98<span class="percent-sign">%</span></div>
+                        <div class="success-label">Memnuniyet Oranı</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Paket & Fiyatlandırma -->
+        <section class="slide" data-slide="13">
+            <div class="slide-content">
+                <h2 class="slide-title">Her Ölçek İçin Uygun Paket</h2>
+                <div class="pricing-table">
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Başlangıç</h3>
+                            <div class="pricing-subtitle">Küçük işletmeler için</div>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="price-amount">Teklif Alın</span>
+                            <span class="price-period">/ ay</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> 50 personele kadar</li>
+                            <li><i class="fas fa-check"></i> Temel modüller</li>
+                            <li><i class="fas fa-check"></i> Email destek</li>
+                            <li><i class="fas fa-check"></i> Aylık raporlar</li>
+                        </ul>
+                        <button class="pricing-btn">Teklif Alın</button>
+                    </div>
+                    <div class="pricing-card popular">
+                        <div class="popular-badge">En Popüler</div>
+                        <div class="pricing-header">
+                            <h3>Profesyonel</h3>
+                            <div class="pricing-subtitle">Büyüyen şirketler için</div>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="price-amount">Teklif Alın</span>
+                            <span class="price-period">/ ay</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> 200 personele kadar</li>
+                            <li><i class="fas fa-check"></i> Tüm modüller</li>
+                            <li><i class="fas fa-check"></i> Öncelikli destek</li>
+                            <li><i class="fas fa-check"></i> Özel raporlar</li>
+                            <li><i class="fas fa-check"></i> API entegrasyonu</li>
+                        </ul>
+                        <button class="pricing-btn primary">Teklif Alın</button>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Kurumsal</h3>
+                            <div class="pricing-subtitle">Büyük organizasyonlar için</div>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="price-amount">Özel Fiyat</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Sınırsız personel</li>
+                            <li><i class="fas fa-check"></i> Tüm modüller</li>
+                            <li><i class="fas fa-check"></i> 7/24 destek</li>
+                            <li><i class="fas fa-check"></i> Özel geliştirmeler</li>
+                            <li><i class="fas fa-check"></i> Özel eğitim</li>
+                            <li><i class="fas fa-check"></i> SLA garantisi</li>
+                        </ul>
+                        <button class="pricing-btn">Teklif Alın</button>
+                    </div>
+                </div>
+                <div class="pricing-note">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Tüm paketlerde <strong>7 gün ücretsiz deneme</strong> imkanı. Kredi kartı bilgisi gerekmez.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Demo & Ücretsiz Deneme -->
+        <section class="slide" data-slide="14">
+            <div class="slide-content">
+                <h2 class="slide-title">Sistemi Canlı Demo ile Keşfedin</h2>
+                <div class="demo-section-new">
+                    <div class="demo-video-container">
+                        <div class="video-wrapper">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                src="https://www.youtube.com/embed/RZ07qGrVSJg"
+                                title="iconIK İK Yönetim Sistemi - Demo Video"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 1rem;">
+                            </iframe>
+                        </div>
+                        <div class="video-caption">
+                            <i class="fas fa-play-circle"></i>
+                            <span>iconIK İK Yönetim Sistemi - Tanıtım Videosu</span>
+                        </div>
+                    </div>
+                    <div class="demo-info-single">
+                        <div class="demo-card-featured">
+                            <div class="demo-icon-wrapper">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <h3>Canlı Demo ile Detayları Keşfedin</h3>
+                            <p class="demo-description">Uzman ekibimiz size özel olarak sistemin tüm özelliklerini canlı demo ile gösterir. İhtiyaçlarınıza özel çözümler sunar ve sorularınızı yanıtlar.</p>
+                            <div class="demo-benefits-grid">
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>30-45 dakikalık detaylı sunum</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Uzman danışman eşliğinde</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Özel çözüm önerileri</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>ROI & maliyet analizi</span>
+                                </div>
+                            </div>
+                            <a href="mailto:sales@lionsoft.com.tr?subject=iconIK Demo Talebi&body=Merhaba,%0D%0A%0D%0AiconIK İK Yönetim Sistemi için canlı demo randevusu almak istiyorum.%0D%0A%0D%0AŞirket Adı:%0D%0AYetkili Adı Soyadı:%0D%0ATelefon:%0D%0AÇalışan Sayısı:%0D%0ATercih Edilen Tarih/Saat:%0D%0A%0D%0ATeşekkürler." class="cta-button-email">
+                                <i class="fas fa-calendar-alt"></i>
+                                Demo Randevusu Al
+                            </a>
+                            <div class="contact-info-inline">
+                                <i class="fas fa-envelope"></i>
+                                <span>sales@lionsoft.com.tr</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="trust-indicators">
+                    <div class="trust-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Güvenli ve uyumlu</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Uzman destek ekibi</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Hızlı kurulum</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-headset"></i>
+                        <span>7/24 teknik destek</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: İletişim & Sonraki Adımlar -->
+        <section class="slide" data-slide="15">
+            <div class="slide-content final-slide">
+                <h2 class="slide-title">Haydi, Dijital Dönüşümü Başlatalım!</h2>
+                <div class="final-grid">
+                    <div class="final-cta">
+                        <h3>Bugün Başlayın</h3>
+                        <p class="final-text">İK süreçlerinizi dijitalleştirmeniz için ihtiyacınız olan her şey hazır</p>
+                        <div class="cta-buttons">
+                            <button class="cta-button primary mega">
+                                <i class="fas fa-rocket"></i>
+                                Ücretsiz Deneyin
+                            </button>
+                            <button class="cta-button secondary mega">
+                                <i class="fas fa-phone"></i>
+                                Bizi Arayın
+                            </button>
+                        </div>
+                        <div class="final-note">
+                            <i class="fas fa-gift"></i>
+                            <span>İlk 100 müşteriye özel <strong>%20 indirim!</strong></span>
+                        </div>
+                    </div>
+                    <div class="contact-block">
+                        <h3>İletişim</h3>
+                        <div class="contact-list">
+                            <div class="contact-row">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <div class="contact-label">Telefon</div>
+                                    <div class="contact-value">0 (552) 217 65 61</div>
+                                </div>
+                            </div>
+                            <div class="contact-row">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <div class="contact-label">E-posta</div>
+                                    <div class="contact-value">sales@lionsoft.com.tr</div>
+                                </div>
+                            </div>
+                            <div class="contact-row">
+                                <i class="fas fa-globe"></i>
+                                <div>
+                                    <div class="contact-label">Website</div>
+                                    <div class="contact-value">www.lionsoft.com.tr</div>
+                                </div>
+                            </div>
+                            <div class="contact-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <div class="contact-label">Adres</div>
+                                    <div class="contact-value">Levent Mah. Karanfil Sk. Villa 13 Beşiktaş / İstanbul</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="thank-you-message">
+                    <h2>Teşekkür Ederiz!</h2>
+                    <p>Zamanın ayırdığınız teşekkür ederiz. Sorularınız için yanınızdayız.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="assets/js/presentation.js"></script>
+</body>
+</html>

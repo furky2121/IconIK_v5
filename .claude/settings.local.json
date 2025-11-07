@@ -1,4 +1,4 @@
-{
+﻿{
   "permissions": {
     "allow": [
       "Bash(dotnet restore:*)",
@@ -20,7 +20,7 @@
       "Bash(npm ls:*)",
       "Bash(ls:*)",
       "WebFetch(domain:hr-management-v1.vercel.app)",
-      "WebFetch(domain:bilgelojistik-api.onrender.com)",
+      "WebFetch(domain:IconIK-api.onrender.com)",
       "Bash(dotnet ef migrations:*)",
       "Bash(dotnet ef database:*)",
       "Bash(dir:*)",
@@ -42,7 +42,8 @@
       "Bash(git rm:*)",
       "Bash(git reset:*)",
       "Bash(if exist nul del nul)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(git remote set-url:*)"
     ],
     "deny": [],
     "ask": []

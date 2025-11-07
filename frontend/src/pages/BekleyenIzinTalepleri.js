@@ -54,7 +54,7 @@ const BekleyenIzinTalepleri = () => {
                 update: yetkiService.hasScreenPermission('bekleyen-izin-talepleri', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: false,
                 write: false,
@@ -214,6 +214,26 @@ const BekleyenIzinTalepleri = () => {
 
     const tarihBodyTemplate = (field) => (rowData) => {
         return izinService.formatTarih(rowData[field]);
+    };
+
+    const raporBodyTemplate = (rowData) => {
+        if (rowData.raporDosyaYolu) {
+            const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+            const raporUrl = `${apiBaseUrl}${rowData.raporDosyaYolu}`;
+
+            return (
+                <a
+                    href={raporUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-button p-button-sm p-button-info p-button-outlined"
+                >
+                    <i className="pi pi-file-pdf mr-2"></i>
+                    Rapor Görüntüle
+                </a>
+            );
+        }
+        return <span className="text-500">Rapor yok</span>;
     };
 
     const header = (
@@ -384,6 +404,12 @@ const BekleyenIzinTalepleri = () => {
                             body={durumBodyTemplate}
                             sortable
                             style={{ width: '100px' }}
+                        ></Column>
+                        <Column
+                            body={raporBodyTemplate}
+                            header="Rapor"
+                            style={{ width: '140px' }}
+                            className="text-center"
                         ></Column>
                         <Column
                             body={actionBodyTemplate}

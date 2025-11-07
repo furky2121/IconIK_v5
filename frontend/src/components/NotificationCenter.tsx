@@ -44,15 +44,6 @@ const NotificationCenter: React.FC = () => {
                 });
                 loadNotifications(personel?.id || personel?.Id || 1);
             }
-
-            // Interval ile yeni bildirimler simüle et (demo amaçlı)
-            const interval = setInterval(() => {
-                if (Math.random() > 0.7) { // %30 şans
-                    simulateNewNotification();
-                }
-            }, 30000); // 30 saniyede bir
-
-            return () => clearInterval(interval);
         }
     }, []);
 
@@ -69,26 +60,9 @@ const NotificationCenter: React.FC = () => {
             }
             setUnreadCount(unreadResult);
         } catch (error) {
-            console.error('Load notifications error:', error);
+            // console.error('Load notifications error:', error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const simulateNewNotification = async () => {
-        if (currentUser?.personelId) {
-            const newNotification = notificationService.simulateNewNotification(currentUser.personelId);
-
-            // Toast göster
-            toast.current?.show({
-                severity: 'info',
-                summary: 'Yeni Bildirim',
-                detail: newNotification.baslik,
-                life: 5000
-            });
-
-            // Listeyi yenile
-            await loadNotifications(currentUser.personelId);
         }
     };
 
@@ -205,27 +179,36 @@ const NotificationCenter: React.FC = () => {
                 <OverlayPanel
                     ref={overlayRef}
                     showCloseIcon
-                    style={{ width: '380px', maxHeight: '500px' }}
+                    style={{ width: '420px', maxHeight: '600px' }}
                     className="notification-overlay"
                 >
                     <div className="notification-header">
                         <div className="flex justify-content-between align-items-center mb-3">
-                            <h6 className="m-0 font-semibold">Bildirimler</h6>
+                            <div>
+                                <h5 className="m-0 font-bold text-900">Bildirimler</h5>
+                                {unreadCount > 0 && (
+                                    <span className="text-sm text-500 mt-1">
+                                        {unreadCount} okunmamış bildirim
+                                    </span>
+                                )}
+                            </div>
                             <div className="flex gap-2">
                                 {unreadCount > 0 && (
                                     <Button
                                         icon="pi pi-check-circle"
-                                        className="p-button-text p-button-sm"
+                                        className="p-button-text p-button-sm p-button-rounded"
                                         onClick={markAllAsRead}
                                         tooltip="Tümünü Okundu İşaretle"
-                                        style={{ color: 'var(--primary-color)' }}
+                                        tooltipOptions={{ position: 'bottom' }}
+                                        style={{ color: 'var(--green-500)' }}
                                     />
                                 )}
                                 <Button
                                     icon="pi pi-trash"
-                                    className="p-button-text p-button-sm"
+                                    className="p-button-text p-button-sm p-button-rounded"
                                     onClick={clearAllNotifications}
                                     tooltip="Tümünü Temizle"
+                                    tooltipOptions={{ position: 'bottom' }}
                                     style={{ color: 'var(--red-500)' }}
                                 />
                             </div>
@@ -233,82 +216,101 @@ const NotificationCenter: React.FC = () => {
                         <Divider className="my-2" />
                     </div>
 
-                    <ScrollPanel style={{ width: '100%', height: '300px' }}>
+                    <ScrollPanel style={{ width: '100%', height: '400px' }}>
                         {loading ? (
-                            <div className="text-center p-4">
-                                <i className="pi pi-spinner pi-spin" style={{ fontSize: '2rem' }}></i>
-                                <p className="mt-2 text-600">Bildirimler yükleniyor...</p>
+                            <div className="text-center p-5">
+                                <i className="pi pi-spinner pi-spin text-primary" style={{ fontSize: '3rem' }}></i>
+                                <p className="mt-3 text-600 font-medium">Bildirimler yükleniyor...</p>
                             </div>
                         ) : notifications.length === 0 ? (
-                            <div className="text-center p-4">
-                                <i className="pi pi-bell-slash" style={{ fontSize: '3rem', color: 'var(--text-color-secondary)' }}></i>
-                                <p className="mt-2 text-600">Henüz bildiriminiz yok</p>
+                            <div className="text-center p-5">
+                                <div className="mb-3">
+                                    <i className="pi pi-bell-slash" style={{ fontSize: '4rem', color: 'var(--text-color-secondary)' }}></i>
+                                </div>
+                                <h6 className="text-700 mb-2">Henüz bildiriminiz yok</h6>
+                                <p className="text-500 text-sm m-0">Yeni bildirimler burada görünecektir</p>
                             </div>
                         ) : (
                             <div className="notification-list">
-                                {notifications.map((notification, index) => (
-                                    <div
-                                        key={notification.id}
-                                        className={`notification-item p-3 cursor-pointer border-round ${
-                                            !notification.okundu ? 'surface-hover' : ''
-                                        }`}
-                                        onClick={() => handleNotificationClick(notification)}
-                                        style={{
-                                            backgroundColor: !notification.okundu ? 'var(--surface-50)' : 'transparent',
-                                            borderLeft: !notification.okundu ? '3px solid var(--primary-color)' : '3px solid transparent',
-                                            marginBottom: index < notifications.length - 1 ? '0.5rem' : 0
-                                        }}
-                                    >
-                                        <div className="flex align-items-start gap-3">
-                                            <Avatar
-                                                icon={`pi ${getCategoryIcon(notification.kategori)}`}
-                                                style={{
-                                                    backgroundColor: getCategoryColor(notification.kategori),
-                                                    color: 'white',
-                                                    minWidth: '40px'
-                                                }}
-                                                size="normal"
-                                                shape="circle"
-                                            />
+                                {notifications.map((notification, index) => {
+                                    const categoryColor = getCategoryColor(notification.kategori);
+                                    return (
+                                        <div
+                                            key={notification.id}
+                                            className="notification-item cursor-pointer border-round transition-all transition-duration-200"
+                                            onClick={() => handleNotificationClick(notification)}
+                                            style={{
+                                                padding: '0.875rem',
+                                                backgroundColor: !notification.okundu ? 'var(--surface-50)' : 'white',
+                                                borderLeft: `4px solid ${!notification.okundu ? categoryColor : 'transparent'}`,
+                                                marginBottom: index < notifications.length - 1 ? '0.75rem' : 0,
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'var(--surface-100)';
+                                                e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.15)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = !notification.okundu ? 'var(--surface-50)' : 'white';
+                                                e.currentTarget.style.boxShadow = 'none';
+                                            }}
+                                        >
+                                            <div className="flex align-items-start gap-3">
+                                                <Avatar
+                                                    icon={`pi ${getCategoryIcon(notification.kategori)}`}
+                                                    style={{
+                                                        backgroundColor: categoryColor,
+                                                        color: 'white',
+                                                        minWidth: '42px',
+                                                        width: '42px',
+                                                        height: '42px'
+                                                    }}
+                                                    size="normal"
+                                                    shape="circle"
+                                                />
 
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex justify-content-between align-items-start">
-                                                    <h6 className={`m-0 text-sm ${!notification.okundu ? 'font-semibold' : 'font-medium'}`}>
-                                                        {notification.baslik}
-                                                    </h6>
-                                                    {!notification.okundu && (
-                                                        <div
-                                                            className="border-circle"
-                                                            style={{
-                                                                backgroundColor: 'var(--primary-color)',
-                                                                width: '8px',
-                                                                height: '8px',
-                                                                marginLeft: '0.5rem',
-                                                                marginTop: '0.25rem'
-                                                            }}
-                                                        />
-                                                    )}
-                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex justify-content-between align-items-start mb-1">
+                                                        <h6 className={`m-0 text-sm ${!notification.okundu ? 'font-bold text-900' : 'font-medium text-700'}`}>
+                                                            {notification.baslik}
+                                                        </h6>
+                                                        {!notification.okundu && (
+                                                            <div
+                                                                className="border-circle"
+                                                                style={{
+                                                                    backgroundColor: categoryColor,
+                                                                    width: '10px',
+                                                                    height: '10px',
+                                                                    marginLeft: '0.5rem',
+                                                                    marginTop: '0.25rem',
+                                                                    flexShrink: 0
+                                                                }}
+                                                            />
+                                                        )}
+                                                    </div>
 
-                                                <p className="m-0 mt-1 text-sm text-600 line-height-3">
-                                                    {notification.mesaj.length > 80
-                                                        ? notification.mesaj.substring(0, 80) + '...'
-                                                        : notification.mesaj
-                                                    }
-                                                </p>
+                                                    <p className="m-0 mt-1 text-sm text-600 line-height-3">
+                                                        {notification.mesaj.length > 85
+                                                            ? notification.mesaj.substring(0, 85) + '...'
+                                                            : notification.mesaj
+                                                        }
+                                                    </p>
 
-                                                <div className="flex justify-content-between align-items-center mt-2">
-                                                    <span className="text-xs text-500">
-                                                        {notification.gonderenAd}
-                                                    </span>
-                                                    <span className="text-xs text-500">
-                                                        {formatTimeAgo(notification.olusturulmaTarihi)}
-                                                    </span>
+                                                    <div className="flex justify-content-between align-items-center mt-2">
+                                                        <span className="text-xs text-500 flex align-items-center gap-1">
+                                                            <i className="pi pi-user" style={{ fontSize: '0.7rem' }}></i>
+                                                            {notification.gonderenAd}
+                                                        </span>
+                                                        <span className="text-xs text-500 flex align-items-center gap-1">
+                                                            <i className="pi pi-clock" style={{ fontSize: '0.7rem' }}></i>
+                                                            {formatTimeAgo(notification.olusturulmaTarihi)}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
                     </ScrollPanel>

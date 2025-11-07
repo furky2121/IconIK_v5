@@ -16,6 +16,10 @@ import { Chip } from 'primereact/chip';
 import { Message } from 'primereact/message';
 import { Panel } from 'primereact/panel';
 import { Divider } from 'primereact/divider';
+import { Skeleton } from 'primereact/skeleton';
+import { DataView } from 'primereact/dataview';
+import { Tag } from 'primereact/tag';
+import { SelectButton } from 'primereact/selectbutton';
 import notificationService from '../services/notificationService';
 import authService from '../services/authService';
 
@@ -34,39 +38,45 @@ const Bildirimler = () => {
         tarihBitis: null
     });
     const [currentUser, setCurrentUser] = useState(null);
-    const [isServiceReady, setIsServiceReady] = useState(false);
+    const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
+    const [stats, setStats] = useState({
+        total: 0,
+        unread: 0,
+        today: 0,
+        thisWeek: 0
+    });
 
     const toast = useRef(null);
     const dt = useRef(null);
 
-    // Service hazır olduğunda seçenekleri oluştur
+    const viewOptions = [
+        { label: 'Tablo', value: 'table', icon: 'pi pi-table' },
+        { label: 'Kart', value: 'grid', icon: 'pi pi-th-large' }
+    ];
+
+    // Kategori seçenekleri
     const getKategoriOptions = () => {
-        if (!isServiceReady || !notificationService.CATEGORIES) {
-            return [{ label: 'Tümü', value: null }];
-        }
         return [
             { label: 'Tümü', value: null },
-            { label: 'İzin', value: notificationService.CATEGORIES.IZIN },
-            { label: 'Eğitim', value: notificationService.CATEGORIES.EGITIM },
-            { label: 'Doğum Günü', value: notificationService.CATEGORIES.DOGUM_GUNU },
-            { label: 'Sistem', value: notificationService.CATEGORIES.SISTEM },
-            { label: 'Avans', value: notificationService.CATEGORIES.AVANS },
-            { label: 'İstifa', value: notificationService.CATEGORIES.ISTIFA },
-            { label: 'Masraf', value: notificationService.CATEGORIES.MASRAF },
-            { label: 'Duyuru', value: notificationService.CATEGORIES.DUYURU }
+            { label: 'İzin', value: 'izin' },
+            { label: 'Eğitim', value: 'egitim' },
+            { label: 'Doğum Günü', value: 'dogum_gunu' },
+            { label: 'Sistem', value: 'sistem' },
+            { label: 'Avans', value: 'avans' },
+            { label: 'İstifa', value: 'istifa' },
+            { label: 'Masraf', value: 'masraf' },
+            { label: 'Duyuru', value: 'duyuru' },
+            { label: 'Anket', value: 'anket' }
         ];
     };
 
     const getTipOptions = () => {
-        if (!isServiceReady || !notificationService.TYPES) {
-            return [{ label: 'Tümü', value: null }];
-        }
         return [
             { label: 'Tümü', value: null },
-            { label: 'Bilgi', value: notificationService.TYPES.INFO },
-            { label: 'Başarılı', value: notificationService.TYPES.SUCCESS },
-            { label: 'Uyarı', value: notificationService.TYPES.WARNING },
-            { label: 'Hata', value: notificationService.TYPES.ERROR }
+            { label: 'Bilgi', value: 'info' },
+            { label: 'Başarılı', value: 'success' },
+            { label: 'Uyarı', value: 'warning' },
+            { label: 'Hata', value: 'error' }
         ];
     };
 
@@ -79,27 +89,29 @@ const Bildirimler = () => {
     useEffect(() => {
         // Client-side kontrolü
         if (typeof window !== 'undefined') {
-            // Service'in hazır olduğunu kontrol et
-            const checkService = () => {
-                if (notificationService && notificationService.CATEGORIES && notificationService.TYPES) {
-                    setIsServiceReady(true);
-                    const user = authService.getUser();
-                    if (user) {
-                        const personel = user.Personel || user.personel;
-                        setCurrentUser({
-                            personelId: personel?.id || personel?.Id || 1
-                        });
-                        loadNotifications(personel?.id || personel?.Id || 1);
-                    }
-                } else {
-                    // Service henüz hazır değilse kısa bir süre sonra tekrar dene
-                    setTimeout(checkService, 100);
-                }
-            };
-
-            checkService();
+            const user = authService.getUser();
+            if (user) {
+                const personel = user.Personel || user.personel;
+                setCurrentUser({
+                    personelId: personel?.id || personel?.Id || 1
+                });
+                loadNotifications(personel?.id || personel?.Id || 1);
+            }
         }
     }, []);
+
+    const calculateStats = (notificationList) => {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+        return {
+            total: notificationList.length,
+            unread: notificationList.filter(n => !n.okundu).length,
+            today: notificationList.filter(n => new Date(n.olusturulmaTarihi) >= today).length,
+            thisWeek: notificationList.filter(n => new Date(n.olusturulmaTarihi) >= weekAgo).length
+        };
+    };
 
     const loadNotifications = async (personelId) => {
         setLoading(true);
@@ -107,6 +119,7 @@ const Bildirimler = () => {
             const result = await notificationService.getAllNotifications(personelId);
             if (result.success) {
                 setNotifications(result.data);
+                setStats(calculateStats(result.data));
             } else {
                 toast.current?.show({
                     severity: 'error',
@@ -115,7 +128,7 @@ const Bildirimler = () => {
                 });
             }
         } catch (error) {
-            console.error('Load notifications error:', error);
+            // console.error('Load notifications error:', error);
             toast.current?.show({
                 severity: 'error',
                 summary: 'Hata',
@@ -238,7 +251,7 @@ const Bildirimler = () => {
 
     // Template functions
     const categoryBodyTemplate = (rowData) => {
-        if (!isServiceReady || !notificationService.getCategoryConfig) {
+        if (!notificationService.getCategoryConfig) {
             return <span>{rowData.kategori}</span>;
         }
         const config = notificationService.getCategoryConfig(rowData.kategori);
@@ -246,7 +259,13 @@ const Bildirimler = () => {
             <Chip
                 label={config.label}
                 icon={`pi ${config.icon}`}
-                style={{ backgroundColor: config.color, color: 'white' }}
+                style={{
+                    backgroundColor: config.color,
+                    color: 'white',
+                    fontSize: '0.7rem',
+                    padding: '0.2rem 0.4rem',
+                    height: '20px'
+                }}
             />
         );
     };
@@ -256,19 +275,24 @@ const Bildirimler = () => {
             <Badge
                 value={rowData.okundu ? 'Okundu' : 'Okunmadı'}
                 severity={rowData.okundu ? 'success' : 'warning'}
+                style={{ fontSize: '0.7rem', padding: '0.2rem 0.4rem' }}
             />
         );
     };
 
     const dateBodyTemplate = (rowData) => {
         const date = new Date(rowData.olusturulmaTarihi);
-        return date.toLocaleDateString('tr-TR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+        return (
+            <span style={{ fontSize: '0.8rem' }}>
+                {date.toLocaleDateString('tr-TR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })}
+            </span>
+        );
     };
 
     const actionBodyTemplate = (rowData) => {
@@ -313,8 +337,16 @@ const Bildirimler = () => {
     };
 
     const rightToolbarTemplate = () => {
+        const activeFilterCount = Object.values(filters).filter(f => f !== null).length;
+
         return (
-            <div className="flex align-items-center gap-2">
+            <div className="flex flex-wrap align-items-center gap-2">
+                <SelectButton
+                    value={viewMode}
+                    onChange={(e) => setViewMode(e.value)}
+                    options={viewOptions}
+                    optionLabel="label"
+                />
                 <span className="p-input-icon-left">
                     <i className="pi pi-search" />
                     <InputText
@@ -329,6 +361,8 @@ const Bildirimler = () => {
                     className="p-button-outlined"
                     onClick={clearFilters}
                     tooltip="Filtreleri Temizle"
+                    badge={activeFilterCount > 0 ? activeFilterCount.toString() : null}
+                    badgeClassName="p-badge-danger"
                 />
             </div>
         );
@@ -355,13 +389,116 @@ const Bildirimler = () => {
 
     const filteredNotifications = applyFilters();
 
+    // Skeleton loader component
+    const renderSkeleton = () => {
+        return (
+            <div className="grid">
+                {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="col-12 md:col-6 lg:col-3">
+                        <Card>
+                            <Skeleton width="100%" height="80px" className="mb-2" />
+                            <Skeleton width="70%" height="20px" />
+                        </Card>
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
+    // Grid görünümü için kart template
+    const gridItemTemplate = (notification) => {
+        if (!notificationService.getCategoryConfig) {
+            return null;
+        }
+
+        const config = notificationService.getCategoryConfig(notification.kategori);
+        const dateObj = new Date(notification.olusturulmaTarihi);
+        const timeAgo = notificationService.formatTimeAgo(notification.olusturulmaTarihi);
+
+        return (
+            <div className="col-12 md:col-6 lg:col-4">
+                <Card
+                    className="notification-card cursor-pointer transition-all transition-duration-300 hover:shadow-5"
+                    style={{
+                        height: '100%',
+                        borderLeft: !notification.okundu ? `4px solid ${config.color}` : '4px solid transparent',
+                        backgroundColor: !notification.okundu ? 'var(--surface-50)' : 'white'
+                    }}
+                    onClick={() => viewNotification(notification)}
+                >
+                    <div className="flex align-items-start gap-3">
+                        <Avatar
+                            icon={`pi ${config.icon}`}
+                            style={{
+                                backgroundColor: config.color,
+                                color: 'white',
+                                minWidth: '48px',
+                                width: '48px',
+                                height: '48px'
+                            }}
+                            size="xlarge"
+                            shape="circle"
+                        />
+                        <div className="flex-1 min-w-0">
+                            <div className="flex justify-content-between align-items-start mb-2">
+                                <Chip
+                                    label={config.label}
+                                    icon={`pi ${config.icon}`}
+                                    style={{ backgroundColor: config.color, color: 'white' }}
+                                    className="text-xs"
+                                />
+                                {!notification.okundu && (
+                                    <div
+                                        className="border-circle"
+                                        style={{
+                                            backgroundColor: config.color,
+                                            width: '10px',
+                                            height: '10px'
+                                        }}
+                                    />
+                                )}
+                            </div>
+                            <h6 className={`mt-2 mb-2 ${!notification.okundu ? 'font-bold' : 'font-medium'}`}>
+                                {notification.baslik}
+                            </h6>
+                            <p className="text-sm text-600 line-height-3 mb-3">
+                                {notification.mesaj.length > 100
+                                    ? notification.mesaj.substring(0, 100) + '...'
+                                    : notification.mesaj
+                                }
+                            </p>
+                            <div className="flex justify-content-between align-items-center">
+                                <span className="text-xs text-500">
+                                    <i className="pi pi-user text-xs mr-1"></i>
+                                    {notification.gonderenAd}
+                                </span>
+                                <span className="text-xs text-500">
+                                    <i className="pi pi-clock text-xs mr-1"></i>
+                                    {timeAgo}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+            </div>
+        );
+    };
+
     return (
         <div className="grid">
             <Toast ref={toast} />
             <ConfirmDialog />
 
             <div className="col-12">
-                <Card title="Bildirimler" className="shadow-3">
+                <Card className="shadow-3">
+                    <div className="flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 className="m-0 text-900 font-bold">Bildirimler</h5>
+                            <p className="m-0 mt-1 text-600">
+                                Toplam {stats.total} bildirim, {stats.unread} okunmamış
+                            </p>
+                        </div>
+                    </div>
 
                     {/* Filtreler */}
                     <Panel header="Filtreler" toggleable collapsed className="mb-4">
@@ -423,32 +560,50 @@ const Bildirimler = () => {
 
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
-                    <DataTable
-                        ref={dt}
-                        value={filteredNotifications}
-                        selection={selectedNotifications}
-                        onSelectionChange={(e) => setSelectedNotifications(e.value)}
-                        dataKey="id"
-                        paginator
-                        rows={10}
-                        rowsPerPageOptions={[5, 10, 25, 50]}
-                        className="datatable-responsive"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="{first} - {last} arası, toplam {totalRecords} bildirim"
-                        globalFilter={globalFilter}
-                        emptyMessage="Bildirim bulunamadı."
-                        loading={loading}
-                        sortMode="multiple"
-                        removableSort
-                    >
-                        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} />
-                        <Column field="baslik" header="Başlık" sortable style={{ minWidth: '200px' }} />
-                        <Column field="kategori" header="Kategori" body={categoryBodyTemplate} sortable />
-                        <Column field="gonderenAd" header="Gönderen" sortable />
-                        <Column field="olusturulmaTarihi" header="Tarih" body={dateBodyTemplate} sortable />
-                        <Column field="okundu" header="Durum" body={statusBodyTemplate} sortable />
-                        <Column header="İşlemler" body={actionBodyTemplate} exportable={false} style={{ minWidth: '100px' }} />
-                    </DataTable>
+                    {loading ? (
+                        renderSkeleton()
+                    ) : filteredNotifications.length === 0 ? (
+                        <div className="text-center p-5">
+                            <div className="mb-4">
+                                <i className="pi pi-inbox" style={{ fontSize: '4rem', color: 'var(--text-color-secondary)' }}></i>
+                            </div>
+                            <h5 className="text-600 mb-2">Bildirim bulunamadı</h5>
+                            <p className="text-500">Henüz herhangi bir bildiriminiz yok veya arama kriterlerinize uygun bildirim bulunmamaktadır.</p>
+                        </div>
+                    ) : viewMode === 'table' ? (
+                        <DataTable
+                            ref={dt}
+                            value={filteredNotifications}
+                            selection={selectedNotifications}
+                            onSelectionChange={(e) => setSelectedNotifications(e.value)}
+                            dataKey="id"
+                            paginator
+                            rows={10}
+                            rowsPerPageOptions={[5, 10, 25, 50]}
+                            className="datatable-responsive"
+                            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                            currentPageReportTemplate="{first} - {last} arası, toplam {totalRecords} bildirim"
+                            globalFilter={globalFilter}
+                            filters={{}}
+                            emptyMessage="Bildirim bulunamadı."
+                            sortMode="multiple"
+                            removableSort
+                            size="small"
+                            style={{ fontSize: '0.875rem' }}
+                        >
+                            <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} bodyStyle={{ padding: '0.5rem' }} />
+                            <Column field="baslik" header="Başlık" sortable style={{ minWidth: '200px' }} bodyStyle={{ padding: '0.5rem', fontSize: '0.85rem' }} />
+                            <Column field="kategori" header="Kategori" body={categoryBodyTemplate} sortable bodyStyle={{ padding: '0.5rem' }} />
+                            <Column field="gonderenAd" header="Gönderen" sortable bodyStyle={{ padding: '0.5rem', fontSize: '0.8rem' }} />
+                            <Column field="olusturulmaTarihi" header="Tarih" body={dateBodyTemplate} sortable bodyStyle={{ padding: '0.5rem' }} />
+                            <Column field="okundu" header="Durum" body={statusBodyTemplate} sortable bodyStyle={{ padding: '0.5rem' }} />
+                            <Column header="İşlemler" body={actionBodyTemplate} exportable={false} style={{ minWidth: '100px' }} bodyStyle={{ padding: '0.5rem' }} />
+                        </DataTable>
+                    ) : (
+                        <div className="grid">
+                            {filteredNotifications.map((notification) => gridItemTemplate(notification))}
+                        </div>
+                    )}
                 </Card>
             </div>
 
@@ -464,7 +619,7 @@ const Bildirimler = () => {
                 {selectedNotification && (
                     <div>
                         <div className="flex align-items-start gap-3 mb-4">
-                            {isServiceReady && notificationService.getCategoryConfig ? (
+                            {notificationService.getCategoryConfig ? (
                                 <Avatar
                                     icon={`pi ${notificationService.getCategoryConfig(selectedNotification.kategori).icon}`}
                                     style={{
@@ -485,20 +640,29 @@ const Bildirimler = () => {
                             <div className="flex-1">
                                 <h5 className="m-0 mb-2">{selectedNotification.baslik}</h5>
                                 <div className="flex flex-wrap gap-2 mb-2">
-                                    {isServiceReady && notificationService.getCategoryConfig ? (
+                                    {notificationService.getCategoryConfig ? (
                                         <Chip
                                             label={notificationService.getCategoryConfig(selectedNotification.kategori).label}
                                             icon={`pi ${notificationService.getCategoryConfig(selectedNotification.kategori).icon}`}
                                             style={{
                                                 backgroundColor: notificationService.getCategoryConfig(selectedNotification.kategori).color,
-                                                color: 'white'
+                                                color: 'white',
+                                                fontSize: '0.7rem',
+                                                padding: '0.2rem 0.4rem',
+                                                height: '20px'
                                             }}
                                         />
                                     ) : (
                                         <Chip
                                             label={selectedNotification.kategori}
                                             icon="pi pi-info-circle"
-                                            style={{ backgroundColor: '#9E9E9E', color: 'white' }}
+                                            style={{
+                                                backgroundColor: '#9E9E9E',
+                                                color: 'white',
+                                                fontSize: '0.7rem',
+                                                padding: '0.2rem 0.4rem',
+                                                height: '20px'
+                                            }}
                                         />
                                     )}
                                     <Badge

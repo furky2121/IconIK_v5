@@ -57,7 +57,7 @@ const AvansTalepleri = () => {
                 update: yetkiService.hasScreenPermission('avans-talepleri', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: false,
                 write: false,
@@ -78,7 +78,7 @@ const AvansTalepleri = () => {
                 loadAvansLimiti()
             ]);
         } catch (error) {
-            console.error('Veri yükleme hatası:', error);
+            // console.error('Veri yükleme hatası:', error);
         } finally {
             setLoading(false);
         }
@@ -109,7 +109,7 @@ const AvansTalepleri = () => {
                 setAvansLimiti(response.data);
             }
         } catch (error) {
-            console.error('Avans limiti yükleme hatası:', error);
+            // console.error('Avans limiti yükleme hatası:', error);
         }
     };
 

@@ -90,7 +90,7 @@ const BasvuruYonetimi = () => {
                 setIsIlanlari(response.data);
             }
         } catch (error) {
-            console.error('İş ilanları yüklenirken hata:', error);
+            // console.error('İş ilanları yüklenirken hata:', error);
         }
     };
 
@@ -101,7 +101,7 @@ const BasvuruYonetimi = () => {
                 setAdaylar(response.data);
             }
         } catch (error) {
-            console.error('Adaylar yüklenirken hata:', error);
+            // console.error('Adaylar yüklenirken hata:', error);
         }
     };
 
@@ -113,7 +113,7 @@ const BasvuruYonetimi = () => {
                 setIstatistikler(response.data);
             }
         } catch (error) {
-            console.error('İstatistikler yüklenirken hata:', error);
+            // console.error('İstatistikler yüklenirken hata:', error);
             toast.current?.show({ severity: 'error', summary: 'Hata', detail: 'İstatistikler yüklenirken hata oluştu.' });
         } finally {
             setIstatistikLoading(false);
@@ -879,7 +879,7 @@ const BasvuruYonetimi = () => {
                                                             const monthIndex = parseInt(ay) - 1;
                                                             return monthIndex >= 0 && monthIndex < 12 ? `${ayAdlari[monthIndex]} ${yil}` : '';
                                                         } catch (error) {
-                                                            console.error('Date parsing error:', error);
+            // console.error('Date parsing error:', error);
                                                             return '';
                                                         }
                                                     }).filter(label => label !== ''),

@@ -1,0 +1,547 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using IconIK.API.Data;
+using IconIK.API.Models;
+using System.Text.Json;
+
+namespace IconIK.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class TeklifMektubuController : ControllerBase
+    {
+        private readonly IconIKContext _context;
+
+        public TeklifMektubuController(IconIKContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<object>> GetTeklifMektuplari()
+        {
+            try
+            {
+                var teklifMektuplari = await _context.TeklifMektuplari
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.Aday)
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.IsIlani)
+                    .Include(tm => tm.HazirlayanPersonel)
+                    .OrderByDescending(tm => tm.OlusturmaTarihi)
+                    .Select(tm => new
+                    {
+                        tm.Id,
+                        tm.BasvuruId,
+                        tm.OlusturmaTarihi,
+                        tm.TeklifTarihi,
+                        tm.GecerlilikTarihi,
+                        tm.Pozisyon,
+                        tm.BrutMaas,
+                        tm.NetMaas,
+                        tm.BaslamaTarihi,
+                        tm.CalismaSaatleri,
+                        tm.IzinHakki,
+                        tm.SaglikSigortasi,
+                        tm.DigerHaklar,
+                        tm.CalismaSartlari,
+                        tm.Durum,
+                        tm.AdayYaniti,
+                        tm.AdayYanitTarihi,
+                        tm.RedNedeni,
+                        tm.Notlar,
+                        tm.HazirlayanPersonelId,
+                        tm.Aktif,
+                        AdayAdi = tm.Basvuru.Aday.AdSoyad,
+                        IlanBasligi = tm.Basvuru.IsIlani.Baslik,
+                        HazirlayanAdi = tm.HazirlayanPersonel.AdSoyad,
+                        DurumAdi = tm.Durum == TeklifDurumu.Hazirlanmakta ? "Hazırlanmakta" :
+                                  tm.Durum == TeklifDurumu.Gonderildi ? "Gönderildi" :
+                                  tm.Durum == TeklifDurumu.AdayKabulEtti ? "Aday Kabul Etti" :
+                                  tm.Durum == TeklifDurumu.AdayReddetti ? "Aday Reddetti" :
+                                  tm.Durum == TeklifDurumu.SureDoldu ? "Süre Doldu" : "Bilinmeyen",
+                        AdayYanitiAdi = tm.AdayYaniti == AdayYaniti.Bekleniyor ? "Bekleniyor" :
+                                       tm.AdayYaniti == AdayYaniti.KabulEtti ? "Kabul Etti" :
+                                       tm.AdayYaniti == AdayYaniti.Reddetti ? "Reddetti" : "Bekleniyor"
+                    })
+                    .ToListAsync();
+
+                return new { success = true, data = teklifMektuplari, message = "Teklif mektupları başarıyla getirildi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif mektupları getirilirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpGet("Aktif")]
+        public async Task<ActionResult<object>> GetAktifTeklifMektuplari()
+        {
+            try
+            {
+                var teklifMektuplari = await _context.TeklifMektuplari
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.Aday)
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.IsIlani)
+                    .Where(tm => tm.Aktif)
+                    .OrderByDescending(tm => tm.OlusturmaTarihi)
+                    .Select(tm => new
+                    {
+                        tm.Id,
+                        tm.BasvuruId,
+                        tm.Pozisyon,
+                        tm.BrutMaas,
+                        tm.TeklifTarihi,
+                        tm.GecerlilikTarihi,
+                        tm.Durum,
+                        AdayAdi = tm.Basvuru.Aday.AdSoyad,
+                        IlanBasligi = tm.Basvuru.IsIlani.Baslik,
+                        DurumAdi = tm.Durum == TeklifDurumu.Hazirlanmakta ? "Hazırlanmakta" :
+                                  tm.Durum == TeklifDurumu.Gonderildi ? "Gönderildi" :
+                                  tm.Durum == TeklifDurumu.AdayKabulEtti ? "Aday Kabul Etti" :
+                                  tm.Durum == TeklifDurumu.AdayReddetti ? "Aday Reddetti" :
+                                  tm.Durum == TeklifDurumu.SureDoldu ? "Süre Doldu" : "Bilinmeyen"
+                    })
+                    .ToListAsync();
+
+                return new { success = true, data = teklifMektuplari, message = "Aktif teklif mektupları başarıyla getirildi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Aktif teklif mektupları getirilirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<object>> GetTeklifMektubu(int id)
+        {
+            try
+            {
+                var teklifMektubu = await _context.TeklifMektuplari
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.Aday)
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.IsIlani)
+                    .Include(tm => tm.HazirlayanPersonel)
+                    .FirstOrDefaultAsync(tm => tm.Id == id);
+
+                if (teklifMektubu == null)
+                {
+                    return NotFound(new { success = false, message = "Teklif mektubu bulunamadı." });
+                }
+
+                var result = new
+                {
+                    teklifMektubu.Id,
+                    teklifMektubu.BasvuruId,
+                    teklifMektubu.OlusturmaTarihi,
+                    teklifMektubu.TeklifTarihi,
+                    teklifMektubu.GecerlilikTarihi,
+                    teklifMektubu.Pozisyon,
+                    teklifMektubu.BrutMaas,
+                    teklifMektubu.NetMaas,
+                    teklifMektubu.BaslamaTarihi,
+                    teklifMektubu.CalismaSaatleri,
+                    teklifMektubu.IzinHakki,
+                    teklifMektubu.SaglikSigortasi,
+                    teklifMektubu.DigerHaklar,
+                    teklifMektubu.CalismaSartlari,
+                    teklifMektubu.Durum,
+                    teklifMektubu.AdayYaniti,
+                    teklifMektubu.AdayYanitTarihi,
+                    teklifMektubu.RedNedeni,
+                    teklifMektubu.Notlar,
+                    teklifMektubu.HazirlayanPersonelId,
+                    teklifMektubu.Aktif,
+                    AdayAdi = teklifMektubu.Basvuru.Aday.AdSoyad,
+                    AdayTelefon = teklifMektubu.Basvuru.Aday.Telefon,
+                    AdayEmail = teklifMektubu.Basvuru.Aday.Email,
+                    IlanBasligi = teklifMektubu.Basvuru.IsIlani.Baslik,
+                    HazirlayanAdi = teklifMektubu.HazirlayanPersonel.AdSoyad
+                };
+
+                return new { success = true, data = result, message = "Teklif mektubu başarıyla getirildi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif mektubu getirilirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<object>> CreateTeklifMektubu([FromBody] JsonElement teklifData)
+        {
+            try
+            {
+                var basvuruId = teklifData.GetProperty("basvuruId").GetInt32();
+
+                // Başvurunun var olduğunu kontrol et
+                var basvuru = await _context.Basvurular
+                    .Include(b => b.Aday)
+                    .Include(b => b.IsIlani)
+                    .FirstOrDefaultAsync(b => b.Id == basvuruId);
+
+                if (basvuru == null)
+                {
+                    return BadRequest(new { success = false, message = "Başvuru bulunamadı." });
+                }
+
+                // Bu başvuru için zaten bir teklif mektubu var mı kontrol et
+                var existingTeklif = await _context.TeklifMektuplari
+                    .FirstOrDefaultAsync(tm => tm.BasvuruId == basvuruId && tm.Aktif);
+
+                if (existingTeklif != null)
+                {
+                    return BadRequest(new { success = false, message = "Bu başvuru için zaten aktif bir teklif mektubu bulunmaktadır." });
+                }
+
+                var teklifMektubu = new TeklifMektubu
+                {
+                    BasvuruId = basvuruId,
+                    OlusturmaTarihi = DateTime.Now,
+                    TeklifTarihi = teklifData.TryGetProperty("teklifTarihi", out var teklifTarihi) && DateTime.TryParse(teklifTarihi.GetString(), out var parsedTeklifTarihi) ? parsedTeklifTarihi : DateTime.Now,
+                    GecerlilikTarihi = teklifData.TryGetProperty("gecerlilikTarihi", out var gecerlilik) && DateTime.TryParse(gecerlilik.GetString(), out var parsedGecerlilik) ? parsedGecerlilik : DateTime.Now.AddDays(15),
+                    Pozisyon = teklifData.TryGetProperty("pozisyon", out var pozisyon) ? pozisyon.GetString() : basvuru.IsIlani.Baslik,
+                    BrutMaas = teklifData.TryGetProperty("brutMaas", out var brutMaas) ? brutMaas.GetDecimal() : 0,
+                    NetMaas = teklifData.TryGetProperty("netMaas", out var netMaas) ? netMaas.GetDecimal() : 0,
+                    BaslamaTarihi = teklifData.TryGetProperty("baslamaTarihi", out var baslama) && DateTime.TryParse(baslama.GetString(), out var parsedBaslama) ? parsedBaslama : DateTime.Now.AddDays(30),
+                    CalismaSaatleri = teklifData.TryGetProperty("calismaSaatleri", out var saatler) ? saatler.GetString() : "09:00 - 18:00",
+                    IzinHakki = teklifData.TryGetProperty("izinHakki", out var izin) ? izin.GetString() : "Yasal izin hakları",
+                    SaglikSigortasi = teklifData.TryGetProperty("saglikSigortasi", out var sigorta) ? sigorta.GetBoolean() : true,
+                    DigerHaklar = teklifData.TryGetProperty("digerHaklar", out var haklar) ? haklar.GetString() : string.Empty,
+                    CalismaSartlari = teklifData.TryGetProperty("calismaSartlari", out var sartlar) ? sartlar.GetString() : string.Empty,
+                    Durum = TeklifDurumu.Hazirlanmakta,
+                    AdayYaniti = AdayYaniti.Bekleniyor,
+                    Notlar = teklifData.TryGetProperty("notlar", out var notlar) ? notlar.GetString() : string.Empty,
+                    HazirlayanPersonelId = int.Parse(User.FindFirst("PersonelId")?.Value ?? "1"),
+                    Aktif = true
+                };
+
+                _context.TeklifMektuplari.Add(teklifMektubu);
+                await _context.SaveChangesAsync();
+
+                return new { success = true, data = teklifMektubu.Id, message = "Teklif mektubu başarıyla oluşturuldu." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif mektubu oluşturulurken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<object>> UpdateTeklifMektubu(int id, [FromBody] JsonElement teklifData)
+        {
+            try
+            {
+                var teklifMektubu = await _context.TeklifMektuplari
+                    .FirstOrDefaultAsync(tm => tm.Id == id);
+
+                if (teklifMektubu == null)
+                {
+                    return NotFound(new { success = false, message = "Teklif mektubu bulunamadı." });
+                }
+
+                // Sadece Hazırlanmakta durumundaki teklifler düzenlenebilir
+                if (teklifMektubu.Durum != TeklifDurumu.Hazirlanmakta)
+                {
+                    return BadRequest(new { success = false, message = "Sadece 'Hazırlanmakta' durumundaki teklif mektupları düzenlenebilir." });
+                }
+
+                // Alanları güncelle
+                if (teklifData.TryGetProperty("teklifTarihi", out var teklifTarihi) && DateTime.TryParse(teklifTarihi.GetString(), out var parsedTeklifTarihi))
+                    teklifMektubu.TeklifTarihi = parsedTeklifTarihi;
+
+                if (teklifData.TryGetProperty("gecerlilikTarihi", out var gecerlilik) && DateTime.TryParse(gecerlilik.GetString(), out var parsedGecerlilik))
+                    teklifMektubu.GecerlilikTarihi = parsedGecerlilik;
+
+                if (teklifData.TryGetProperty("pozisyon", out var pozisyon))
+                    teklifMektubu.Pozisyon = pozisyon.GetString();
+
+                if (teklifData.TryGetProperty("brutMaas", out var brutMaas))
+                    teklifMektubu.BrutMaas = brutMaas.GetDecimal();
+
+                if (teklifData.TryGetProperty("netMaas", out var netMaas))
+                    teklifMektubu.NetMaas = netMaas.GetDecimal();
+
+                if (teklifData.TryGetProperty("baslamaTarihi", out var baslama) && DateTime.TryParse(baslama.GetString(), out var parsedBaslama))
+                    teklifMektubu.BaslamaTarihi = parsedBaslama;
+
+                if (teklifData.TryGetProperty("calismaSaatleri", out var saatler))
+                    teklifMektubu.CalismaSaatleri = saatler.GetString();
+
+                if (teklifData.TryGetProperty("izinHakki", out var izin))
+                    teklifMektubu.IzinHakki = izin.GetString();
+
+                if (teklifData.TryGetProperty("saglikSigortasi", out var sigorta))
+                    teklifMektubu.SaglikSigortasi = sigorta.GetBoolean();
+
+                if (teklifData.TryGetProperty("digerHaklar", out var haklar))
+                    teklifMektubu.DigerHaklar = haklar.GetString();
+
+                if (teklifData.TryGetProperty("calismaSartlari", out var sartlar))
+                    teklifMektubu.CalismaSartlari = sartlar.GetString();
+
+                if (teklifData.TryGetProperty("notlar", out var notlar))
+                    teklifMektubu.Notlar = notlar.GetString();
+
+                if (teklifData.TryGetProperty("aktif", out var aktif))
+                    teklifMektubu.Aktif = aktif.GetBoolean();
+
+                await _context.SaveChangesAsync();
+
+                return new { success = true, message = "Teklif mektubu başarıyla güncellendi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif mektubu güncellenirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<object>> DeleteTeklifMektubu(int id)
+        {
+            try
+            {
+                var teklifMektubu = await _context.TeklifMektuplari.FindAsync(id);
+
+                if (teklifMektubu == null)
+                {
+                    return NotFound(new { success = false, message = "Teklif mektubu bulunamadı." });
+                }
+
+                // Sadece Hazırlanmakta durumundaki teklifler silinebilir
+                if (teklifMektubu.Durum != TeklifDurumu.Hazirlanmakta)
+                {
+                    return BadRequest(new { success = false, message = "Sadece 'Hazırlanmakta' durumundaki teklif mektupları silinebilir." });
+                }
+
+                _context.TeklifMektuplari.Remove(teklifMektubu);
+                await _context.SaveChangesAsync();
+
+                return new { success = true, message = "Teklif mektubu başarıyla silindi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif mektubu silinirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpPut("{id}/gonder")]
+        public async Task<ActionResult<object>> TeklifiGonder(int id)
+        {
+            try
+            {
+                var teklifMektubu = await _context.TeklifMektuplari
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.Aday)
+                    .FirstOrDefaultAsync(tm => tm.Id == id);
+
+                if (teklifMektubu == null)
+                {
+                    return NotFound(new { success = false, message = "Teklif mektubu bulunamadı." });
+                }
+
+                if (teklifMektubu.Durum != TeklifDurumu.Hazirlanmakta)
+                {
+                    return BadRequest(new { success = false, message = "Sadece 'Hazırlanmakta' durumundaki teklif mektupları gönderilebilir." });
+                }
+
+                // Gerekli alanların dolu olduğunu kontrol et
+                if (string.IsNullOrEmpty(teklifMektubu.Pozisyon) ||
+                    teklifMektubu.BrutMaas <= 0 ||
+                    teklifMektubu.GecerlilikTarihi <= DateTime.Now)
+                {
+                    return BadRequest(new { success = false, message = "Teklif mektubunda eksik veya hatalı bilgiler var. Lütfen kontrol edin." });
+                }
+
+                teklifMektubu.Durum = TeklifDurumu.Gonderildi;
+                teklifMektubu.TeklifTarihi = DateTime.Now;
+                teklifMektubu.AdayYaniti = AdayYaniti.Bekleniyor;
+
+                // Başvuru durumunu güncelle
+                teklifMektubu.Basvuru.Durum = BasvuruDurumu.TeklifVerildi;
+
+                await _context.SaveChangesAsync();
+
+                return new { success = true, message = "Teklif mektubu başarıyla gönderildi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif mektubu gönderilirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpPut("{id}/aday-yaniti")]
+        public async Task<ActionResult<object>> AdayYanitiGuncelle(int id, [FromBody] JsonElement yanitData)
+        {
+            try
+            {
+                var teklifMektubu = await _context.TeklifMektuplari
+                    .Include(tm => tm.Basvuru)
+                    .FirstOrDefaultAsync(tm => tm.Id == id);
+
+                if (teklifMektubu == null)
+                {
+                    return NotFound(new { success = false, message = "Teklif mektubu bulunamadı." });
+                }
+
+                if (teklifMektubu.Durum != TeklifDurumu.Gonderildi)
+                {
+                    return BadRequest(new { success = false, message = "Sadece gönderilmiş teklif mektupları için aday yanıtı güncellenebilir." });
+                }
+
+                var yanit = yanitData.GetProperty("adayYaniti").GetString();
+                var redNedeni = yanitData.TryGetProperty("redNedeni", out var neden) ? neden.GetString() : null;
+
+                switch (yanit)
+                {
+                    case "KabulEtti":
+                        teklifMektubu.AdayYaniti = AdayYaniti.KabulEtti;
+                        teklifMektubu.Durum = TeklifDurumu.AdayKabulEtti;
+                        teklifMektubu.Basvuru.Durum = BasvuruDurumu.IseAlindi;
+                        break;
+                    case "Reddetti":
+                        teklifMektubu.AdayYaniti = AdayYaniti.Reddetti;
+                        teklifMektubu.Durum = TeklifDurumu.AdayReddetti;
+                        teklifMektubu.RedNedeni = redNedeni;
+                        teklifMektubu.Basvuru.Durum = BasvuruDurumu.AdayVazgecti;
+                        break;
+                    default:
+                        return BadRequest(new { success = false, message = "Geçersiz aday yanıtı." });
+                }
+
+                teklifMektubu.AdayYanitTarihi = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+
+                return new { success = true, message = "Aday yanıtı başarıyla güncellendi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Aday yanıtı güncellenirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpPut("{id}/sure-doldu")]
+        public async Task<ActionResult<object>> SureDoldu(int id)
+        {
+            try
+            {
+                var teklifMektubu = await _context.TeklifMektuplari
+                    .Include(tm => tm.Basvuru)
+                    .FirstOrDefaultAsync(tm => tm.Id == id);
+
+                if (teklifMektubu == null)
+                {
+                    return NotFound(new { success = false, message = "Teklif mektubu bulunamadı." });
+                }
+
+                if (teklifMektubu.Durum != TeklifDurumu.Gonderildi)
+                {
+                    return BadRequest(new { success = false, message = "Sadece gönderilmiş teklif mektupları için süre doldu işlemi yapılabilir." });
+                }
+
+                teklifMektubu.Durum = TeklifDurumu.SureDoldu;
+                teklifMektubu.Basvuru.Durum = BasvuruDurumu.AdayVazgecti;
+
+                await _context.SaveChangesAsync();
+
+                return new { success = true, message = "Teklif mektubu süresi doldu olarak işaretlendi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Süre doldu işlemi yapılırken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpGet("basvuru/{basvuruId}")]
+        public async Task<ActionResult<object>> GetBasvuruTeklifi(int basvuruId)
+        {
+            try
+            {
+                var teklifMektubu = await _context.TeklifMektuplari
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.Aday)
+                    .Include(tm => tm.Basvuru)
+                        .ThenInclude(b => b.IsIlani)
+                    .Include(tm => tm.HazirlayanPersonel)
+                    .FirstOrDefaultAsync(tm => tm.BasvuruId == basvuruId && tm.Aktif);
+
+                if (teklifMektubu == null)
+                {
+                    return NotFound(new { success = false, message = "Bu başvuru için teklif mektubu bulunamadı." });
+                }
+
+                var result = new
+                {
+                    teklifMektubu.Id,
+                    teklifMektubu.BasvuruId,
+                    teklifMektubu.OlusturmaTarihi,
+                    teklifMektubu.TeklifTarihi,
+                    teklifMektubu.GecerlilikTarihi,
+                    teklifMektubu.Pozisyon,
+                    teklifMektubu.BrutMaas,
+                    teklifMektubu.NetMaas,
+                    teklifMektubu.BaslamaTarihi,
+                    teklifMektubu.CalismaSaatleri,
+                    teklifMektubu.IzinHakki,
+                    teklifMektubu.SaglikSigortasi,
+                    teklifMektubu.DigerHaklar,
+                    teklifMektubu.CalismaSartlari,
+                    teklifMektubu.Durum,
+                    teklifMektubu.AdayYaniti,
+                    teklifMektubu.AdayYanitTarihi,
+                    teklifMektubu.RedNedeni,
+                    teklifMektubu.Notlar,
+                    AdayAdi = teklifMektubu.Basvuru.Aday.AdSoyad,
+                    IlanBasligi = teklifMektubu.Basvuru.IsIlani.Baslik,
+                    HazirlayanAdi = teklifMektubu.HazirlayanPersonel.AdSoyad
+                };
+
+                return new { success = true, data = result, message = "Teklif mektubu başarıyla getirildi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif mektubu getirilirken hata oluştu: {ex.Message}" });
+            }
+        }
+
+        [HttpGet("istatistik")]
+        public async Task<ActionResult<object>> GetTeklifIstatistikleri()
+        {
+            try
+            {
+                var toplamTeklif = await _context.TeklifMektuplari.Where(tm => tm.Aktif).CountAsync();
+                var hazirlanmaktaTeklif = await _context.TeklifMektuplari.Where(tm => tm.Aktif && tm.Durum == TeklifDurumu.Hazirlanmakta).CountAsync();
+                var gonderilmisTeklif = await _context.TeklifMektuplari.Where(tm => tm.Aktif && tm.Durum == TeklifDurumu.Gonderildi).CountAsync();
+                var kabulEdilenTeklif = await _context.TeklifMektuplari.Where(tm => tm.Aktif && tm.Durum == TeklifDurumu.AdayKabulEtti).CountAsync();
+                var reddilenTeklif = await _context.TeklifMektuplari.Where(tm => tm.Aktif && tm.Durum == TeklifDurumu.AdayReddetti).CountAsync();
+                var sureDolanTeklif = await _context.TeklifMektuplari.Where(tm => tm.Aktif && tm.Durum == TeklifDurumu.SureDoldu).CountAsync();
+
+                var kabulOrani = toplamTeklif > 0 ? Math.Round((double)kabulEdilenTeklif / toplamTeklif * 100, 2) : 0;
+                var redOrani = toplamTeklif > 0 ? Math.Round((double)reddilenTeklif / toplamTeklif * 100, 2) : 0;
+
+                var istatistikler = new
+                {
+                    ToplamTeklif = toplamTeklif,
+                    HazirlanmaktaTeklif = hazirlanmaktaTeklif,
+                    GonderilmisTeklif = gonderilmisTeklif,
+                    KabulEdilenTeklif = kabulEdilenTeklif,
+                    ReddilenTeklif = reddilenTeklif,
+                    SureDolanTeklif = sureDolanTeklif,
+                    KabulOrani = kabulOrani,
+                    RedOrani = redOrani
+                };
+
+                return new { success = true, data = istatistikler, message = "Teklif istatistikleri başarıyla getirildi." };
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = $"Teklif istatistikleri getirilirken hata oluştu: {ex.Message}" });
+            }
+        }
+    }
+}

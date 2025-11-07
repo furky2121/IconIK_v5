@@ -36,9 +36,7 @@ class FileUploadService {
     }
 
     getAvatarUrl(fileName) {
-        console.log('fileUploadService.getAvatarUrl called with:', fileName);
         if (!fileName) {
-            console.log('fileUploadService.getAvatarUrl - fileName is null/empty, returning null');
             return null;
         }
         // Eğer fileName tam URL ise direkt kullan
@@ -55,11 +53,9 @@ class FileUploadService {
         if (fileName.startsWith('/uploads/avatars/')) {
             return `${baseUrl}${fileName}?v=${sessionId}`;
         }
-        
+
         // Sadece dosya adı ise tam path oluştur
-        const finalUrl = `${baseUrl}/uploads/avatars/${fileName}?v=${sessionId}`;
-        console.log('fileUploadService.getAvatarUrl - Final URL:', finalUrl);
-        return finalUrl;
+        return `${baseUrl}/uploads/avatars/${fileName}?v=${sessionId}`;
     }
 
     // Avatar cache'ini temizle

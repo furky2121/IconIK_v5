@@ -79,7 +79,7 @@ const OrganizasyonSemasi = () => {
                 update: yetkiService.hasScreenPermission('organizasyon-semasi', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: false,
                 write: false,
@@ -93,14 +93,14 @@ const OrganizasyonSemasi = () => {
         setLoading(true);
         try {
             const response = await organizasyonService.getOrganizasyonSemasi();
-            console.log('Organizasyon şeması response:', response);
+            // console.log('Organizasyon şeması response:', response);
 
             if (response.success) {
                 const orgData = response.data.organizasyonSemasi;
-                console.log('Orijinal organizasyon verisi:', JSON.stringify(orgData, null, 2));
+            // console.log('Orijinal organizasyon verisi:', JSON.stringify(orgData, null, 2));
                 setOriginalData(orgData);
                 // Başlangıçta tüm veriyi yükle, expansion CSS ile kontrol et
-                console.log('Tüm veri yüklendi:', JSON.stringify(orgData, null, 2));
+            // console.log('Tüm veri yüklendi:', JSON.stringify(orgData, null, 2));
                 setOrganizasyonData(orgData);
                 setDepartmanIstatistikleri(response.data.departmanIstatistikleri);
                 setIsAllExpanded(false);
@@ -108,7 +108,7 @@ const OrganizasyonSemasi = () => {
                 throw new Error(response.message || 'Veri getirilemedi');
             }
         } catch (error) {
-            console.error('Organizasyon şeması yükleme hatası:', error);
+            // console.error('Organizasyon şeması yükleme hatası:', error);
             toast.current.show({
                 severity: 'error',
                 summary: 'Hata',
@@ -136,7 +136,7 @@ const OrganizasyonSemasi = () => {
                                 className="org-avatar"
                                 style={{ border: `4px solid ${kademeColor}` }}
                                 onImageError={(e) => {
-                                    console.log('Avatar image error:', e);
+            // console.log('Avatar image error:', e);
                                     const target = e.target;
                                     const parent = target?.parentElement;
                                     if (target && parent) {
@@ -258,7 +258,7 @@ const OrganizasyonSemasi = () => {
     };
 
     const toggleAllNodes = () => {
-        console.log('toggleAllNodes çağrıldı. isAllExpanded:', isAllExpanded);
+            // console.log('toggleAllNodes çağrıldı. isAllExpanded:', isAllExpanded);
         setIsAllExpanded(!isAllExpanded);
     };
 
@@ -284,7 +284,7 @@ const OrganizasyonSemasi = () => {
         if (element) {
             if (!document.fullscreenElement) {
                 element.requestFullscreen().catch(err => {
-                    console.error('Fullscreen error:', err);
+            // console.error('Fullscreen error:', err);
                 });
             } else {
                 document.exitFullscreen();
@@ -452,7 +452,7 @@ const OrganizasyonSemasi = () => {
                     size="normal"
                     shape="circle"
                     onImageError={(e) => {
-                        console.log('Table avatar error:', e);
+            // console.log('Table avatar error:', e);
                     }}
                 />
             );
@@ -703,7 +703,7 @@ const OrganizasyonSemasi = () => {
                                                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)'
                                                 }}
                                                 onImageError={(e) => {
-                                                    console.log('Profile popup avatar error:', e);
+            // console.log('Profile popup avatar error:', e);
                                                 }}
                                             />
                                         ) : (
@@ -831,7 +831,7 @@ const OrganizasyonSemasi = () => {
                                                     height: '42px'
                                                 }}
                                                 onImageError={(e) => {
-                                                    console.log('Manager avatar error:', e);
+            // console.log('Manager avatar error:', e);
                                                 }}
                                             />
                                         ) : (

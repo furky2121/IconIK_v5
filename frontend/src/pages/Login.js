@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
@@ -8,7 +8,9 @@ import { Checkbox } from 'primereact/checkbox';
 import { Divider } from 'primereact/divider';
 import { useRouter } from 'next/navigation';
 import authService from '../services/authService';
+import kvkkService from '../services/kvkkService';
 import ForgotPasswordModal from '../components/ForgotPasswordModal';
+import KVKKOnayDialog from '../components/KVKKOnayDialog';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
@@ -18,8 +20,84 @@ const Login = ({ onLogin }) => {
     const [loading, setLoading] = useState(false);
     const [redirecting, setRedirecting] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
+    const [showKVKKDialog, setShowKVKKDialog] = useState(false);
+    const [tempUserData, setTempUserData] = useState(null);
     const toast = useRef(null);
     const router = useRouter();
+
+    const handleKVKKAccept = async () => {
+        try {
+            if (!tempUserData) return;
+
+            // KVKK onayını kaydet
+            const response = await kvkkService.onayKaydet(tempUserData.kullanici.id, true);
+
+            if (response.success) {
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'KVKK onayınız kaydedildi.',
+                    life: 3000
+                });
+
+                // Dialog'u kapat
+                setShowKVKKDialog(false);
+
+                // Kullanıcı bilgilerini güncelle
+                const updatedUser = { ...tempUserData.kullanici, kvkkOnaylandi: true };
+                authService.setUser(updatedUser);
+
+                // Şifre değişikliğine yönlendir
+                toast.current.show({
+                    severity: 'info',
+                    summary: 'İlk Giriş',
+                    detail: 'Güvenlik nedeniyle şifrenizi değiştirmeniz gerekmektedir',
+                    life: 3000
+                });
+
+                setRedirecting(true);
+                setTimeout(() => {
+                    router.push(`/ilk-giris-sifre-degistir?kullaniciAdi=${tempUserData.kullanici.kullaniciAdi}`);
+                }, 2000);
+            }
+        } catch (error) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Hata',
+                detail: error.message || 'KVKK onayı kaydedilemedi.',
+                life: 3000
+            });
+        }
+    };
+
+    const handleKVKKReject = async () => {
+        try {
+            if (!tempUserData) return;
+
+            // KVKK reddedildi, onayı kaydet
+            await kvkkService.onayKaydet(tempUserData.kullanici.id, false);
+
+            // Dialog'u kapat
+            setShowKVKKDialog(false);
+
+            // Kullanıcıyı çıkar
+            authService.removeToken();
+            setTempUserData(null);
+
+            // Form alanlarını temizle
+            setKullaniciAdi('');
+            setSifre('');
+
+            toast.current.show({
+                severity: 'warn',
+                summary: 'Uyarı',
+                detail: 'KVKK iznini kabul etmeden sisteme giriş yapamazsınız.',
+                life: 5000
+            });
+        } catch (error) {
+            // KVKK reddi kaydedilirken hata oluştu
+        }
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -38,25 +116,11 @@ const Login = ({ onLogin }) => {
         try {
             // Önceki oturum verilerini temizle
             authService.removeToken();
-            
-            console.log('=== LOGIN DEBUG ===');
-            console.log('Kullanıcı Adı:', kullaniciAdi);
-            console.log('Şifre:', sifre);
-            console.log('API çağrısı başlatılıyor...');
-            
+
             const response = await authService.login(kullaniciAdi, sifre);
-            
-            console.log('API Response:', response);
-            console.log('Response Data:', response?.data);
-            console.log('Response Kullanici:', response?.data?.kullanici);
-            
+
             if (response.success) {
-                // Debug login response
-                console.log('Login - Full response:', JSON.stringify(response, null, 2));
-                console.log('Login - Kullanici data:', JSON.stringify(response.data.kullanici, null, 2));
-                console.log('Login - Personel data:', JSON.stringify(response.data.kullanici.personel, null, 2));
-                console.log('Login - FotografUrl:', response.data.kullanici.personel?.fotografUrl);
-                
+
                 // Token ve kullanıcı bilgilerini kaydet
                 authService.setToken(response.data.token);
                 authService.setUser(response.data.kullanici);
@@ -69,27 +133,32 @@ const Login = ({ onLogin }) => {
 
                 // İlk giriş kontrolü
                 if (response.data.kullanici.ilkGiris) {
-                    toast.current.show({
-                        severity: 'info',
-                        summary: 'İlk Giriş',
-                        detail: 'Güvenlik nedeniyle şifrenizi değiştirmeniz gerekmektedir',
-                        life: 3000
-                    });
-                    
-                    setRedirecting(true);
-                    setTimeout(() => {
-                        router.push(`/ilk-giris-sifre-degistir?kullaniciAdi=${kullaniciAdi}`);
-                    }, 2000);
+                    // KVKK onay kontrolü - İlk girişte KVKK onaylanmamışsa dialog göster
+                    if (!response.data.kullanici.kvkkOnaylandi) {
+                        setTempUserData(response.data);
+                        setShowKVKKDialog(true);
+                        setLoading(false);
+                    } else {
+                        // KVKK onaylanmış, şifre değişikliğine yönlendir
+                        toast.current.show({
+                            severity: 'info',
+                            summary: 'İlk Giriş',
+                            detail: 'Güvenlik nedeniyle şifrenizi değiştirmeniz gerekmektedir',
+                            life: 3000
+                        });
+
+                        setRedirecting(true);
+                        setTimeout(() => {
+                            router.push(`/ilk-giris-sifre-degistir?kullaniciAdi=${kullaniciAdi}`);
+                        }, 2000);
+                    }
                 } else {
-                    console.log('Normal giriş, yönlendiriliyor...');
-                    console.log('onLogin callback var mı?', !!onLogin);
+                    // İlk giriş değil, normal giriş
                     setRedirecting(true);
                     setTimeout(() => {
                         if (onLogin) {
-                            console.log('onLogin callback çağırılıyor');
                             onLogin();
                         } else {
-                            console.log('router.push("/") çağırılıyor');
                             router.push('/');
                         }
                     }, 1000);
@@ -118,8 +187,8 @@ const Login = ({ onLogin }) => {
                     <div className="login-branding">
                         <div className="login-logo">
                             <img
-                                src="/layout/images/bilge_lojistik.png"
-                                alt="BilgeLojistik Logo"
+                                src="/layout/images/icon_ik.png"
+                                alt="IconIK Logo"
                                 style={{
                                     width: '150px',
                                     height: '112px',
@@ -231,6 +300,12 @@ const Login = ({ onLogin }) => {
             <ForgotPasswordModal
                 visible={showForgotPassword}
                 onHide={() => setShowForgotPassword(false)}
+            />
+
+            <KVKKOnayDialog
+                visible={showKVKKDialog}
+                onAccept={handleKVKKAccept}
+                onReject={handleKVKKReject}
             />
 
             {/* Login Footer */}

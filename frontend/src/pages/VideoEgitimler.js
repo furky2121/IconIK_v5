@@ -101,7 +101,7 @@ const VideoEgitimler = () => {
                 update: yetkiService.hasScreenPermission('egitimler', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({ read: false, write: false, delete: false, update: false });
         }
     };
@@ -114,7 +114,7 @@ const VideoEgitimler = () => {
                 setKategoriler(response.data);
             }
         } catch (error) {
-            console.error('Kategoriler yüklenirken hata:', error);
+            // console.error('Kategoriler yüklenirken hata:', error);
             toast.current.show({ severity: 'error', summary: 'Hata', detail: 'Kategoriler yüklenemedi.' });
         }
     };
@@ -128,7 +128,7 @@ const VideoEgitimler = () => {
                 setFilteredEgitimler(response.data);
             }
         } catch (error) {
-            console.error('Video eğitimler yüklenirken hata:', error);
+            // console.error('Video eğitimler yüklenirken hata:', error);
             toast.current.show({ severity: 'error', summary: 'Hata', detail: 'Video eğitimler yüklenemedi.' });
         } finally {
             setLoading(false);
@@ -146,7 +146,7 @@ const VideoEgitimler = () => {
                 setPersoneller(options);
             }
         } catch (error) {
-            console.error('Personeller yüklenirken hata:', error);
+            // console.error('Personeller yüklenirken hata:', error);
         }
     };
 
@@ -161,7 +161,7 @@ const VideoEgitimler = () => {
                 setDepartmanlar(options);
             }
         } catch (error) {
-            console.error('Departmanlar yüklenirken hata:', error);
+            // console.error('Departmanlar yüklenirken hata:', error);
         }
     };
 
@@ -176,7 +176,7 @@ const VideoEgitimler = () => {
                 setPozisyonlar(options);
             }
         } catch (error) {
-            console.error('Pozisyonlar yüklenirken hata:', error);
+            // console.error('Pozisyonlar yüklenirken hata:', error);
         }
     };
 
@@ -343,7 +343,7 @@ const VideoEgitimler = () => {
                     });
                 }
             } catch (error) {
-                console.error('Video süresi çekilirken hata:', error);
+            // console.error('Video süresi çekilirken hata:', error);
                 toast.current.show({
                     severity: 'warn',
                     summary: 'Uyarı',
@@ -400,7 +400,7 @@ const VideoEgitimler = () => {
         return (
             <div className="thumbnail-container">
                 <Image 
-                    src={rowData.thumbnailUrl || '/layout/images/bilge_lojistik.png'} 
+                    src={rowData.thumbnailUrl || '/layout/images/icon_ik.png'} 
                     alt={rowData.baslik}
                     width="80" 
                     height="45" 
@@ -487,8 +487,8 @@ const VideoEgitimler = () => {
             <div className="col-12 md:col-6 lg:col-4" key={egitim.id}>
                 <Card className="video-card h-full">
                     <div className="video-card-header">
-                        <Image 
-                            src={egitim.thumbnailUrl || '/layout/images/bilge_lojistik.png'} 
+                        <Image
+                            src={egitim.thumbnailUrl || '/layout/images/icon_ik.png'} 
                             alt={egitim.baslik}
                             width="100%" 
                             height="160"

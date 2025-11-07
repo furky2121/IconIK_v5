@@ -59,7 +59,7 @@ const MasrafTalepleri = () => {
                 update: yetkiService.hasScreenPermission('masraf-talepleri', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: false,
                 write: false,
@@ -77,7 +77,7 @@ const MasrafTalepleri = () => {
         try {
             await loadMasrafTalepleri();
         } catch (error) {
-            console.error('Veri yükleme hatası:', error);
+            // console.error('Veri yükleme hatası:', error);
         } finally {
             setLoading(false);
         }
@@ -108,7 +108,7 @@ const MasrafTalepleri = () => {
                 setMasrafLimiti(response.data);
             }
         } catch (error) {
-            console.error('Masraf limiti yükleme hatası:', error);
+            // console.error('Masraf limiti yükleme hatası:', error);
             setMasrafLimiti(null);
         }
     };

@@ -1,4 +1,4 @@
-# Render Environment Variables Setup
+﻿# Render Environment Variables Setup
 
 ## Backend (API Service) - Environment Variables
 
@@ -11,9 +11,9 @@ DATABASE_URL=postgresql://username:password@hostname:port/database_name
 
 ### JWT Settings
 ```
-JWT_SECRET_KEY=BilgeLojistikIK-JWT-Secret-Key-2024-Very-Strong-Key
-JWT_ISSUER=BilgeLojistikIK.API
-JWT_AUDIENCE=BilgeLojistikIK.Client
+JWT_SECRET_KEY=IconIKIK-JWT-Secret-Key-2024-Very-Strong-Key
+JWT_ISSUER=IconIK.API
+JWT_AUDIENCE=IconIKIK.Client
 JWT_EXPIRATION_HOURS=8
 ```
 
@@ -27,8 +27,8 @@ FRONTEND_URL=https://hr-management-v1.vercel.app
 Vercel'de frontend için:
 
 ```
-NEXT_PUBLIC_API_BASE_URL=https://bilgelojistik-api.onrender.com/api
-NEXT_PUBLIC_FILE_BASE_URL=https://bilgelojistik-api.onrender.com
+NEXT_PUBLIC_API_BASE_URL=https://IconIK-api.onrender.com/api
+NEXT_PUBLIC_FILE_BASE_URL=https://IconIK-api.onrender.com
 ```
 
 ## Hata Çözümü

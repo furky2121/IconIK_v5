@@ -136,7 +136,7 @@ const Personeller = () => {
                 update: yetkiService.hasScreenPermission('personeller', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             // If permission loading fails, deny all permissions for safety
             setPermissions({
                 read: false,
@@ -161,9 +161,9 @@ const Personeller = () => {
         setLoading(true);
         try {
             const response = await personelService.getAllPersoneller();
-            console.log('LoadPersoneller - Backend response:', response);
+            // console.log('LoadPersoneller - Backend response:', response);
             if (response.success) {
-                console.log('LoadPersoneller - First personel:', response.data[0]);
+            // console.log('LoadPersoneller - First personel:', response.data[0]);
                 setPersoneller(response.data);
             }
         } catch (error) {
@@ -186,7 +186,7 @@ const Personeller = () => {
                 setDepartmanlar(response.data);
             }
         } catch (error) {
-            console.error('Departmanlar yüklenirken hata:', error);
+            // console.error('Departmanlar yüklenirken hata:', error);
         }
     };
 
@@ -197,7 +197,7 @@ const Personeller = () => {
                 setKademeler(response.data);
             }
         } catch (error) {
-            console.error('Kademeler yüklenirken hata:', error);
+            // console.error('Kademeler yüklenirken hata:', error);
         }
     };
 
@@ -209,7 +209,7 @@ const Personeller = () => {
                 setPozisyonlar(response.data);
             }
         } catch (error) {
-            console.error('Pozisyonlar yüklenirken hata:', error);
+            // console.error('Pozisyonlar yüklenirken hata:', error);
         }
     };
 
@@ -220,7 +220,7 @@ const Personeller = () => {
                 setYoneticiler(response.data);
             }
         } catch (error) {
-            console.error('Yöneticiler yüklenirken hata:', error);
+            // console.error('Yöneticiler yüklenirken hata:', error);
         }
     };
 
@@ -258,7 +258,7 @@ const Personeller = () => {
                     setPozisyonMaasBilgi(response.data);
                 }
             } catch (error) {
-                console.error('Pozisyon maaş bilgisi alınırken hata:', error);
+            // console.error('Pozisyon maaş bilgisi alınırken hata:', error);
             }
 
             // Seçilen pozisyonun kademe seviyesini bul
@@ -489,19 +489,19 @@ const Personeller = () => {
     };
 
     const editPersonel = async (personel) => {
-        console.log('EditPersonel - Received personel data:', personel);
-        console.log('EditPersonel - KullaniciAdi value:', personel.kullaniciAdi);
+            // console.log('EditPersonel - Received personel data:', personel);
+            // console.log('EditPersonel - KullaniciAdi value:', personel.kullaniciAdi);
         
         // Fetch complete personel data including kullaniciAdi
         try {
             const response = await personelService.getPersonelById(personel.id);
             if (response.success) {
-                console.log('EditPersonel - Fresh data from API:', response.data);
-                console.log('EditPersonel - Fresh KullaniciAdi:', response.data.kullaniciAdi);
+            // console.log('EditPersonel - Fresh data from API:', response.data);
+            // console.log('EditPersonel - Fresh KullaniciAdi:', response.data.kullaniciAdi);
                 personel = response.data; // Use fresh data from API
             }
         } catch (error) {
-            console.error('Error fetching fresh personel data:', error);
+            // console.error('Error fetching fresh personel data:', error);
         }
         
         // Departman seçildikten sonra pozisyonları filtrele
@@ -527,7 +527,7 @@ const Personeller = () => {
                         setPozisyonMaasBilgi(response.data);
                     }
                 } catch (error) {
-                    console.error('Pozisyon maaş bilgisi alınırken hata:', error);
+            // console.error('Pozisyon maaş bilgisi alınırken hata:', error);
                 }
             }
         }

@@ -2,16 +2,13 @@ import ApiService from './api';
 
 class AuthService {
     async login(kullaniciAdi, sifre) {
-        console.log('🔑 AuthService.login called:', { kullaniciAdi, sifre });
         try {
             const result = await ApiService.post('/auth/login', {
                 kullaniciAdi,
                 sifre
             });
-            console.log('✅ AuthService.login success:', result);
             return result;
         } catch (error) {
-            console.error('❌ AuthService.login error:', error);
             throw error;
         }
     }
@@ -69,13 +66,7 @@ class AuthService {
     getUser() {
         if (typeof window !== 'undefined') {
             const user = localStorage.getItem('user');
-            const parsedUser = user ? JSON.parse(user) : null;
-            console.log('AuthService - getUser returning:', parsedUser);
-            if (parsedUser) {
-                console.log('AuthService - User has personel?', !!parsedUser.personel);
-                console.log('AuthService - personel fotografUrl:', parsedUser.personel?.fotografUrl);
-            }
-            return parsedUser;
+            return user ? JSON.parse(user) : null;
         }
         return null;
     }
@@ -96,7 +87,6 @@ class AuthService {
     clearAllCache() {
         localStorage.clear();
         sessionStorage.clear();
-        console.log('Tüm cache temizlendi');
     }
 
     // Token geçerlilik kontrolü

@@ -1,6 +1,6 @@
-# 🚀 Production Deployment Kılavuzu
+﻿# 🚀 Production Deployment Kılavuzu
 
-**BilgeLojistik İK Yönetim Sistemi** - Vercel (Frontend) + Render (Backend API + PostgreSQL Database)
+**IconIK İK Yönetim Sistemi** - Vercel (Frontend) + Render (Backend API + PostgreSQL Database)
 
 Bu kılavuz, projenizi sıfırdan production ortamına deploy etmek için gereken tüm adımları içerir.
 
@@ -23,9 +23,9 @@ Bu kılavuz, projenizi sıfırdan production ortamına deploy etmek için gereke
 1. [Render Dashboard](https://dashboard.render.com)'a gidin
 2. Sağ üstten **New +** → **PostgreSQL** seçin
 3. Database ayarlarını yapın:
-   - **Name**: `bilgelojistik-db` (veya istediğiniz isim)
-   - **Database**: `bilgelojistikikdb`
-   - **User**: `bilgelojistik`
+   - **Name**: `IconIK-db` (veya istediğiniz isim)
+   - **Database**: `IconIKikdb`
+   - **User**: `IconIK`
    - **Region**: **Frankfurt (EU)** (Türkiye'ye en yakın)
    - **PostgreSQL Version**: 15 veya 16
    - **Plan**: **Free** seçin
@@ -43,7 +43,7 @@ Database hazır olduğunda:
 
 Örnek format:
 ```
-postgresql://bilgelojistik:XXXXXXXXX@dpg-xxxxx-a.frankfurt-postgres.render.com/bilgelojistikikdb
+postgresql://IconIK:XXXXXXXXX@dpg-xxxxx-a.frankfurt-postgres.render.com/IconIKikdb
 ```
 
 ### 1.3 Database Initialization (İsteğe Bağlı)
@@ -56,11 +56,11 @@ postgresql://bilgelojistik:XXXXXXXXX@dpg-xxxxx-a.frankfurt-postgres.render.com/b
 1. Render Dashboard → Database → Connect → **PSQL Command** kopyalayın
 2. Terminalden bağlanın:
    ```bash
-   psql postgresql://bilgelojistik:XXXXXXXXX@dpg-xxxxx.frankfurt-postgres.render.com/bilgelojistikikdb
+   psql postgresql://IconIK:XXXXXXXXX@dpg-xxxxx.frankfurt-postgres.render.com/IconIKikdb
    ```
 3. SQL script'i çalıştırın (isteğe bağlı):
    ```sql
-   \i backend/BilgeLojistikIK.API/SQL/BilgeLojistikIKdb_Setup.sql
+   \i backend/IconIK.API/SQL/IconIKdb_Setup.sql
    ```
 
 > **Not:** Free tier database'ler 90 gün inaktivite sonrası silinir. Düzenli backup almayı unutmayın!
@@ -84,18 +84,18 @@ git push origin main
 4. Ayarları yapılandırın:
 
 **Temel Ayarlar:**
-   - **Name**: `bilgelojistik-api` (URL: bilgelojistik-api.onrender.com)
+   - **Name**: `IconIK-api` (URL: IconIK-api.onrender.com)
    - **Region**: **Frankfurt (EU)**
    - **Branch**: `main`
    - **Root Directory**: Boş bırakın (veya repository root)
    - **Runtime**: **.NET** seçin
    - **Build Command**:
      ```bash
-     cd backend/BilgeLojistikIK.API && dotnet restore && dotnet build -c Release
+     cd backend/IconIK.API && dotnet restore && dotnet build -c Release
      ```
    - **Start Command**:
      ```bash
-     cd backend/BilgeLojistikIK.API && dotnet run -c Release --no-launch-profile --urls http://0.0.0.0:$PORT
+     cd backend/IconIK.API && dotnet run -c Release --no-launch-profile --urls http://0.0.0.0:$PORT
      ```
    - **Plan**: **Free** seçin
 
@@ -113,14 +113,14 @@ git push origin main
 2. **DATABASE_URL**
    - Value: Adım 1.2'de kopyaladığınız database connection string
    ```
-   postgresql://bilgelojistik:XXXXXXXXX@dpg-xxxxx.frankfurt-postgres.render.com/bilgelojistikikdb
+   postgresql://IconIK:XXXXXXXXX@dpg-xxxxx.frankfurt-postgres.render.com/IconIKikdb
    ```
 
 3. **JWT_SECRET_KEY**
    - Güçlü bir secret key oluşturun (minimum 32 karakter)
    - Örnek üretme: [Generate Random String](https://www.random.org/strings/)
    ```
-   BilgeLojistikIK-Production-JWT-Secret-Key-2024-XyZ123!@#
+   IconIKIK-Production-JWT-Secret-Key-2024-XyZ123!@#
    ```
 
 4. **FRONTEND_URL**
@@ -146,10 +146,10 @@ git push origin main
 ### 2.5 Deployment Doğrulama
 
 Deploy tamamlandığında:
-1. Service URL'ini kopyalayın (örn: `https://bilgelojistik-api.onrender.com`)
+1. Service URL'ini kopyalayın (örn: `https://IconIK-api.onrender.com`)
 2. Health check endpoint'i test edin:
    ```
-   https://bilgelojistik-api.onrender.com/health
+   https://IconIK-api.onrender.com/health
    ```
    Response:
    ```json
@@ -163,7 +163,7 @@ Deploy tamamlandığında:
 
 3. API base URL'i not edin (Vercel deployment'ta kullanılacak):
    ```
-   https://bilgelojistik-api.onrender.com/api
+   https://IconIK-api.onrender.com/api
    ```
 
 > **Önemli Not:** Free tier'da service 15 dakika inaktivite sonrası uyur. İlk istekte 30-50 saniye cold start süresi normaldir.
@@ -198,13 +198,13 @@ Deploy tamamlandığında:
 1. **NEXT_PUBLIC_API_BASE_URL**
    - Value: Adım 2.5'te not ettiğiniz API URL
    ```
-   https://bilgelojistik-api.onrender.com/api
+   https://IconIK-api.onrender.com/api
    ```
 
 2. **NEXT_PUBLIC_FILE_BASE_URL**
    - Value: File serving için base URL
    ```
-   https://bilgelojistik-api.onrender.com
+   https://IconIK-api.onrender.com
    ```
 
 > Her iki değişken de **Production**, **Preview** ve **Development** için aynı olmalı (hepsini seçin)
@@ -286,7 +286,7 @@ Giriş yaptıktan sonra test edin:
 
 Backend health'ini kontrol edin:
 ```
-https://bilgelojistik-api.onrender.com/health
+https://IconIK-api.onrender.com/health
 ```
 
 Beklenen response:
@@ -315,7 +315,7 @@ Beklenen response:
    ```
 2. Build command'ı doğrulayın:
    ```bash
-   cd backend/BilgeLojistikIK.API && dotnet restore && dotnet build -c Release
+   cd backend/IconIK.API && dotnet restore && dotnet build -c Release
    ```
 3. Root directory ayarının boş olduğundan emin olun
 
@@ -576,17 +576,17 @@ https://your-project-name.vercel.app
 
 **Backend API (Render):**
 ```
-https://bilgelojistik-api.onrender.com/api
+https://IconIK-api.onrender.com/api
 ```
 
 **Health Check:**
 ```
-https://bilgelojistik-api.onrender.com/health
+https://IconIK-api.onrender.com/health
 ```
 
 **Database (Render):**
 ```
-postgresql://bilgelojistik:XXXXX@dpg-xxxxx.frankfurt-postgres.render.com/bilgelojistikikdb
+postgresql://IconIK:XXXXX@dpg-xxxxx.frankfurt-postgres.render.com/IconIKikdb
 ```
 
 ### İlk Kullanıcılar

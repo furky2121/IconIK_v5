@@ -4,27 +4,27 @@ class IzinKonfigurasyonService {
 
     // İzin Tipleri CRUD işlemleri
     async getAllIzinTipleri() {
-        return await ApiService.get('/izintipleri');
+        return await ApiService.get('/izintipi');
     }
 
     async getAktifIzinTipleri() {
-        return await ApiService.get('/izintipleri/aktif');
+        return await ApiService.get('/izintipi/aktif');
     }
 
     async getIzinTipiById(id) {
-        return await ApiService.get(`/izintipleri/${id}`);
+        return await ApiService.get(`/izintipi/${id}`);
     }
 
     async createIzinTipi(izinTipi) {
-        return await ApiService.post('/izintipleri', izinTipi);
+        return await ApiService.post('/izintipi', izinTipi);
     }
 
     async updateIzinTipi(id, izinTipi) {
-        return await ApiService.put(`/izintipleri/${id}`, izinTipi);
+        return await ApiService.put(`/izintipi/${id}`, izinTipi);
     }
 
     async deleteIzinTipi(id) {
-        return await ApiService.delete(`/izintipleri/${id}`);
+        return await ApiService.delete(`/izintipi/${id}`);
     }
 
     // Yıllık İzin Kuralları CRUD işlemleri
@@ -63,7 +63,7 @@ class IzinKonfigurasyonService {
 
     // Cinsiyet bazlı izin tipleri
     async getIzinTipleriByGender(cinsiyet) {
-        return await ApiService.get(`/izintipleri/cinsiyet?cinsiyet=${cinsiyet}`);
+        return await ApiService.get(`/izintipi/aktif?cinsiyet=${cinsiyet}`);
     }
 
     // Konfigürasyon ayarları

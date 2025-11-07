@@ -105,7 +105,7 @@ const MulakatTakvimi = () => {
                 setPersoneller([]);
             }
         } catch (error) {
-            console.error('Personeller yüklenirken hata:', error);
+            // console.error('Personeller yüklenirken hata:', error);
             setPersoneller([]);
         }
     };
@@ -284,6 +284,19 @@ const MulakatTakvimi = () => {
         return '-';
     };
 
+    const notlarBodyTemplate = (rowData) => {
+        if (!rowData.notlar) return '-';
+        const maxLength = 50;
+        if (rowData.notlar.length > maxLength) {
+            return (
+                <span title={rowData.notlar}>
+                    {rowData.notlar.substring(0, maxLength)}...
+                </span>
+            );
+        }
+        return rowData.notlar;
+    };
+
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="flex gap-2">
@@ -365,8 +378,10 @@ const MulakatTakvimi = () => {
                     <Column field="turText" header="Tür" body={turBodyTemplate} sortable style={{ minWidth: '10rem' }} />
                     <Column field="tarih" header="Tarih" body={tarihBodyTemplate} sortable style={{ minWidth: '12rem' }} />
                     <Column field="sure" header="Süre (dk)" sortable style={{ minWidth: '8rem' }} />
+                    <Column field="lokasyon" header="Lokasyon" sortable style={{ minWidth: '12rem' }} />
                     <Column field="mulakatYapan" header="Mülakat Yapan" sortable style={{ minWidth: '12rem' }} />
                     <Column field="durum" header="Durum" body={durumBodyTemplate} sortable style={{ minWidth: '10rem' }} />
+                    <Column field="notlar" header="Notlar" body={notlarBodyTemplate} sortable style={{ minWidth: '14rem' }} />
                     <Column field="puan" header="Puan" body={puanBodyTemplate} style={{ minWidth: '8rem' }} />
                     <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
                 </DataTable>

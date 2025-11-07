@@ -29,13 +29,12 @@ class ApiService {
         }
 
         try {
-            console.log('🚀 API Request:', { url, config });
             const response = await fetch(url, config);
-            
+
             // Check if response has content to parse
             let data = null;
             const contentType = response.headers.get('content-type');
-            
+
             if (contentType && contentType.includes('application/json') && response.status !== 204) {
                 data = await response.json();
             } else if (response.status === 204) {
@@ -55,27 +54,8 @@ class ApiService {
                 }
             }
 
-            console.log('✅ API Response:', {
-                status: response.status,
-                statusText: response.statusText,
-                url: url,
-                data: data,
-                ok: response.ok,
-                headers: Object.fromEntries(response.headers.entries())
-            });
-
             // Başarılı status kodları: 200-299 aralığı
             if (!response.ok) {
-                const errorDetails = {
-                    status: response.status,
-                    statusText: response.statusText,
-                    url: url,
-                    data: data,
-                    timestamp: new Date().toISOString()
-                };
-                console.error('API Error Details:', errorDetails);
-                window.lastApiError = errorDetails; // Debug için
-                
                 // Provide more specific error messages based on status code
                 let errorMessage = data?.message || data?.title;
                 if (!errorMessage) {
@@ -107,13 +87,15 @@ class ApiService {
                             errorMessage = `HTTP ${response.status}: ${response.statusText}`;
                     }
                 }
-                
-                throw new Error(errorMessage || 'Bir hata oluştu');
+
+                // Create error with response data attached
+                const error = new Error(errorMessage || 'Bir hata oluştu');
+                error.response = { data, status: response.status };
+                throw error;
             }
 
             return data;
         } catch (error) {
-            console.error('API Request Error:', error);
             throw error;
         }
     }

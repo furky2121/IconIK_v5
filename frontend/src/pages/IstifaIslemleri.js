@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -58,7 +58,7 @@ const IstifaIslemleri = () => {
                 update: yetkiService.hasScreenPermission('istifa-islemleri', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: false,
                 write: false,
@@ -239,7 +239,7 @@ const IstifaIslemleri = () => {
         </head>
         <body>
             <div class="header">
-                <div class="company-title">BİLGE LOJİSTİK A.Ş.</div>
+                <div class="company-title">Icon A.Ş.</div>
                 <div class="company-address">İnsan Kaynakları Müdürlüğü'ne</div>
                 <div class="form-title">İSTİFA DİLEKÇESİ</div>
             </div>

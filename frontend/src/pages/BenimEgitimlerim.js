@@ -49,7 +49,7 @@ const BenimEgitimlerim = () => {
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 setPersonalId(payload.personelId || payload.sub);
             } catch (error) {
-                console.error('Error parsing token:', error);
+            // console.error('Error parsing token:', error);
                 toast.current?.show({
                     severity: 'error',
                     summary: 'Hata',
@@ -68,7 +68,7 @@ const BenimEgitimlerim = () => {
                 loadIstatistikler(),
             ]);
         } catch (error) {
-            console.error('Error loading data:', error);
+            // console.error('Error loading data:', error);
             toast.current?.show({
                 severity: 'error',
                 summary: 'Hata',
@@ -87,7 +87,7 @@ const BenimEgitimlerim = () => {
                 createTimelineData(response.data);
             }
         } catch (error) {
-            console.error('Error loading my trainings:', error);
+            // console.error('Error loading my trainings:', error);
         }
     };
 
@@ -98,7 +98,7 @@ const BenimEgitimlerim = () => {
                 setBekleyenEgitimler(response.data);
             }
         } catch (error) {
-            console.error('Error loading pending trainings:', error);
+            // console.error('Error loading pending trainings:', error);
         }
     };
 
@@ -110,7 +110,7 @@ const BenimEgitimlerim = () => {
                 createChartData(response.data);
             }
         } catch (error) {
-            console.error('Error loading statistics:', error);
+            // console.error('Error loading statistics:', error);
         }
     };
 
@@ -162,7 +162,7 @@ const BenimEgitimlerim = () => {
         const egitim = rowData.VideoEgitim || rowData;
         return (
             <img 
-                src={egitim.thumbnailUrl || '/layout/images/bilge_lojistik.png'} 
+                src={egitim.thumbnailUrl || '/layout/images/icon_ik.png'} 
                 alt={egitim.baslik}
                 width="60" 
                 height="40" 

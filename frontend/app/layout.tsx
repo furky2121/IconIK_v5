@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 export const dynamic = 'force-dynamic';
 
 import { LayoutProvider } from '../layout/context/layoutcontext';
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <html lang="tr" suppressHydrationWarning>
             <head>
                 <title>İnsan Kaynakları Yönetim Sistemi</title>
-                <meta name="description" content="BilgeLojistik İK Yönetim Sistemi - Modern ve kullanıcı dostu insan kaynakları yönetimi" />
+                <meta name="description" content="IconIK İK Yönetim Sistemi - Modern ve kullanıcı dostu insan kaynakları yönetimi" />
                 <link id="theme-css" href={`/themes/lara-light-blue/theme.css`} rel="stylesheet"></link>
             </head>
             <body>

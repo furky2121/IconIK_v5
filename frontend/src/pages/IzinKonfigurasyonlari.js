@@ -17,6 +17,7 @@ import { Divider } from 'primereact/divider';
 import { Panel } from 'primereact/panel';
 import { confirmDialog } from 'primereact/confirmdialog';
 import yetkiService from '../services/yetkiService';
+import izinKonfigurasyonService from '../services/izinKonfigurasyonService';
 
 const IzinKonfigurasyonlari = () => {
     const [izinTipleri, setIzinTipleri] = useState([]);
@@ -44,11 +45,15 @@ const IzinKonfigurasyonlari = () => {
     const emptyIzinTipi = {
         id: null,
         izinTipiAdi: '',
-        standartGunSayisi: 0,
+        standartGunSayisi: null,
+        minimumGunSayisi: null,
         maksimumGunSayisi: null,
-        cinsiyetKisiti: null, // null: Herkese, 'K': Kadın, 'E': Erkek
+        cinsiyetKisiti: null, // null: Herkese, 'Kadın': Kadın, 'Erkek': Erkek
         raporGerekli: false,
+        ucretliMi: true,
+        renk: null,
         aciklama: '',
+        sira: 0,
         aktif: true
     };
 
@@ -63,8 +68,8 @@ const IzinKonfigurasyonlari = () => {
 
     const cinsiyetSecenekleri = [
         { label: 'Herkese', value: null },
-        { label: 'Sadece Kadınlar', value: 'K' },
-        { label: 'Sadece Erkekler', value: 'E' }
+        { label: 'Sadece Kadınlar', value: 'Kadın' },
+        { label: 'Sadece Erkekler', value: 'Erkek' }
     ];
 
     useEffect(() => {
@@ -82,7 +87,7 @@ const IzinKonfigurasyonlari = () => {
                 update: yetkiService.hasScreenPermission('izin-konfigurasyonlari', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             setPermissions({
                 read: true, // Geçici olarak true, servis hazır olana kadar
                 write: true,
@@ -95,96 +100,22 @@ const IzinKonfigurasyonlari = () => {
     const loadData = async () => {
         setLoading(true);
         try {
-            // Mock data - gerçek API'ler hazır olana kadar
-            const mockIzinTipleri = [
-                {
-                    id: 1,
-                    izinTipiAdi: 'Yıllık İzin',
-                    standartGunSayisi: 14,
-                    maksimumGunSayisi: 26,
-                    cinsiyetKisiti: null,
-                    raporGerekli: false,
-                    aciklama: 'Kıdem yılına göre hesaplanır',
-                    aktif: true
-                },
-                {
-                    id: 2,
-                    izinTipiAdi: 'Doğum İzni',
-                    standartGunSayisi: 112,
-                    maksimumGunSayisi: 112,
-                    cinsiyetKisiti: 'K',
-                    raporGerekli: true,
-                    aciklama: '16 hafta doğum izni',
-                    aktif: true
-                },
-                {
-                    id: 3,
-                    izinTipiAdi: 'Hastalık İzni',
-                    standartGunSayisi: 1,
-                    maksimumGunSayisi: null,
-                    cinsiyetKisiti: null,
-                    raporGerekli: true,
-                    aciklama: 'Hekim raporu ile',
-                    aktif: true
-                },
-                {
-                    id: 4,
-                    izinTipiAdi: 'Evlilik İzni',
-                    standartGunSayisi: 3,
-                    maksimumGunSayisi: 3,
-                    cinsiyetKisiti: null,
-                    raporGerekli: false,
-                    aciklama: 'Evlilik belgesi ile',
-                    aktif: true
-                },
-                {
-                    id: 5,
-                    izinTipiAdi: 'Ölüm İzni',
-                    standartGunSayisi: 3,
-                    maksimumGunSayisi: 7,
-                    cinsiyetKisiti: null,
-                    raporGerekli: false,
-                    aciklama: 'Yakınlık derecesine göre',
-                    aktif: true
-                }
-            ];
+            // Load İzin Tipleri from API
+            const izinTipleriResponse = await izinKonfigurasyonService.getAllIzinTipleri();
+            if (izinTipleriResponse.success) {
+                setIzinTipleri(izinTipleriResponse.data);
+            }
 
-            const mockYillikKurallari = [
-                {
-                    id: 1,
-                    minKidemYili: 1,
-                    maxKidemYili: 5,
-                    izinGunSayisi: 14,
-                    aciklama: '1-5 yıl arası çalışanlar',
-                    aktif: true
-                },
-                {
-                    id: 2,
-                    minKidemYili: 5,
-                    maxKidemYili: 15,
-                    izinGunSayisi: 20,
-                    aciklama: '5-15 yıl arası çalışanlar',
-                    aktif: true
-                },
-                {
-                    id: 3,
-                    minKidemYili: 15,
-                    maxKidemYili: null,
-                    izinGunSayisi: 26,
-                    aciklama: '15 yıl üzeri çalışanlar',
-                    aktif: true
-                }
-            ];
-
-            setIzinTipleri(mockIzinTipleri);
-            setYillikIzinKurallari(mockYillikKurallari);
+            // Load Yıllık İzin Kuralları from API (if API is ready)
+            // For now, using empty array until Yıllık İzin Kuralları API is implemented
+            setYillikIzinKurallari([]);
 
         } catch (error) {
             console.error('Data loading error:', error);
             toast.current?.show({
                 severity: 'error',
                 summary: 'Hata',
-                detail: 'Veriler yüklenirken hata oluştu'
+                detail: 'Veriler yüklenirken hata oluştu: ' + (error.message || 'Bilinmeyen hata')
             });
         } finally {
             setLoading(false);
@@ -202,34 +133,43 @@ const IzinKonfigurasyonlari = () => {
         setIzinTipiDialog(false);
     };
 
-    const saveIzinTipi = () => {
+    const saveIzinTipi = async () => {
         setSubmitted(true);
 
         if (selectedIzinTipi.izinTipiAdi.trim()) {
-            let _izinTipleri = [...izinTipleri];
-            let _izinTipi = { ...selectedIzinTipi };
+            try {
+                let response;
+                if (selectedIzinTipi.id) {
+                    // Update existing
+                    response = await izinKonfigurasyonService.updateIzinTipi(selectedIzinTipi.id, selectedIzinTipi);
+                    toast.current.show({
+                        severity: 'success',
+                        summary: 'Başarılı',
+                        detail: 'İzin tipi güncellendi'
+                    });
+                } else {
+                    // Create new
+                    response = await izinKonfigurasyonService.createIzinTipi(selectedIzinTipi);
+                    toast.current.show({
+                        severity: 'success',
+                        summary: 'Başarılı',
+                        detail: 'İzin tipi eklendi'
+                    });
+                }
 
-            if (selectedIzinTipi.id) {
-                const index = findIndexById(selectedIzinTipi.id, _izinTipleri);
-                _izinTipleri[index] = _izinTipi;
+                if (response.success) {
+                    loadData(); // Reload data from API
+                    setIzinTipiDialog(false);
+                    setSelectedIzinTipi(emptyIzinTipi);
+                }
+            } catch (error) {
+                console.error('Save error:', error);
                 toast.current.show({
-                    severity: 'success',
-                    summary: 'Başarılı',
-                    detail: 'İzin tipi güncellendi'
-                });
-            } else {
-                _izinTipi.id = createId();
-                _izinTipleri.push(_izinTipi);
-                toast.current.show({
-                    severity: 'success',
-                    summary: 'Başarılı',
-                    detail: 'İzin tipi eklendi'
+                    severity: 'error',
+                    summary: 'Hata',
+                    detail: 'İzin tipi kaydedilirken hata oluştu: ' + (error.message || 'Bilinmeyen hata')
                 });
             }
-
-            setIzinTipleri(_izinTipleri);
-            setIzinTipiDialog(false);
-            setSelectedIzinTipi(emptyIzinTipi);
         }
     };
 
@@ -247,15 +187,26 @@ const IzinKonfigurasyonlari = () => {
         });
     };
 
-    const deleteIzinTipi = (izinTipi) => {
-        let _izinTipleri = izinTipleri.filter((val) => val.id !== izinTipi.id);
-        setIzinTipleri(_izinTipleri);
-        setSelectedIzinTipi(emptyIzinTipi);
-        toast.current.show({
-            severity: 'success',
-            summary: 'Başarılı',
-            detail: 'İzin tipi silindi'
-        });
+    const deleteIzinTipi = async (izinTipi) => {
+        try {
+            const response = await izinKonfigurasyonService.deleteIzinTipi(izinTipi.id);
+            if (response.success) {
+                loadData(); // Reload data from API
+                setSelectedIzinTipi(emptyIzinTipi);
+                toast.current.show({
+                    severity: 'success',
+                    summary: 'Başarılı',
+                    detail: 'İzin tipi silindi'
+                });
+            }
+        } catch (error) {
+            console.error('Delete error:', error);
+            toast.current.show({
+                severity: 'error',
+                summary: 'Hata',
+                detail: 'İzin tipi silinirken hata oluştu: ' + (error.message || 'Bilinmeyen hata')
+            });
+        }
     };
 
     const findIndexById = (id, array) => {
@@ -439,7 +390,7 @@ const IzinKonfigurasyonlari = () => {
                                     loading={loading}
                                 >
                                     <Column field="izinTipiAdi" header="İzin Tipi" sortable />
-                                    <Column field="standartGunSayisi" header="Standart Gün" sortable />
+                                    <Column field="minimumGunSayisi" header="Minimum Gün" sortable />
                                     <Column field="maksimumGunSayisi" header="Maksimum Gün" sortable />
                                     <Column field="cinsiyetKisiti" header="Cinsiyet Kısıtı" body={cinsiyetBodyTemplate} />
                                     <Column field="raporGerekli" header="Rapor Gerekli" body={raporBodyTemplate} />
@@ -602,23 +553,27 @@ const IzinKonfigurasyonlari = () => {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="standartGunSayisi">Standart Gün Sayısı</label>
+                    <label htmlFor="minimumGunSayisi">Minimum Gün Sayısı (Zorunlu Değil)</label>
                     <InputNumber
-                        id="standartGunSayisi"
-                        value={selectedIzinTipi?.standartGunSayisi}
-                        onValueChange={(e) => onInputNumberChange(e, 'standartGunSayisi')}
+                        id="minimumGunSayisi"
+                        value={selectedIzinTipi?.minimumGunSayisi}
+                        onValueChange={(e) => onInputNumberChange(e, 'minimumGunSayisi')}
                         min={0}
+                        placeholder="Boş bırakılabilir"
                     />
+                    <small className="p-text-secondary">Örn: Yıllık İzin için boş bırakın (personel 1 gün de kullanabilsin)</small>
                 </div>
 
                 <div className="field">
-                    <label htmlFor="maksimumGunSayisi">Maksimum Gün Sayısı</label>
+                    <label htmlFor="maksimumGunSayisi">Maksimum Gün Sayısı (Zorunlu Değil)</label>
                     <InputNumber
                         id="maksimumGunSayisi"
                         value={selectedIzinTipi?.maksimumGunSayisi}
                         onValueChange={(e) => onInputNumberChange(e, 'maksimumGunSayisi')}
                         min={0}
+                        placeholder="Boş bırakılabilir"
                     />
+                    <small className="p-text-secondary">Not: Yıllık İzin için otomatik hesaplanır (kıdeme göre)</small>
                 </div>
 
                 <div className="field">

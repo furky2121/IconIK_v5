@@ -190,7 +190,7 @@ class VideoEgitimService {
 
     // Get fallback thumbnail URL
     getFallbackThumbnail() {
-        return '/layout/images/bilge_lojistik.png';
+        return '/layout/images/icon_ik.png';
     }
 
     // Get thumbnail with fallback

@@ -76,7 +76,7 @@ const IzinTakvimi = () => {
                 setDepartmanlar(response.data);
             }
         } catch (error) {
-            console.error('Departmanlar yüklenirken hata:', error);
+            // console.error('Departmanlar yüklenirken hata:', error);
         }
     };
 
@@ -90,29 +90,29 @@ const IzinTakvimi = () => {
                 throw new Error('Kullanıcı bilgileri bulunamadı. Lütfen tekrar giriş yapın.');
             }
 
-            console.log('Loading izin takvimi with params:', { selectedDepartman, kullaniciId, userLevel: user.personel?.pozisyon?.kademe?.seviye });
+            // console.log('Loading izin takvimi with params:', { selectedDepartman, kullaniciId, userLevel: user.personel?.pozisyon?.kademe?.seviye });
             const response = await izinService.getIzinTakvimi(selectedDepartman, kullaniciId);
-            console.log('Izin takvimi response:', response);
+            // console.log('Izin takvimi response:', response);
             
             if (response.success) {
-                console.log('Raw calendar data:', response.data);
-                console.log('Selected month/year:', selectedMonth, selectedYear);
+            // console.log('Raw calendar data:', response.data);
+            // console.log('Selected month/year:', selectedMonth, selectedYear);
                 
                 // DEBUG: İlk kaydın tarih verisini kontrol et
                 if (response.data.length > 0) {
                     const firstRecord = response.data[0];
-                    console.log('DEBUG Frontend - İlk kayıt:', firstRecord);
-                    console.log('DEBUG Frontend - Start:', firstRecord.start);
-                    console.log('DEBUG Frontend - End:', firstRecord.end);
-                    console.log('DEBUG Frontend - Parsed start date:', new Date(firstRecord.start));
-                    console.log('DEBUG Frontend - Parsed end date:', new Date(firstRecord.end));
+            // console.log('DEBUG Frontend - İlk kayıt:', firstRecord);
+            // console.log('DEBUG Frontend - Start:', firstRecord.start);
+            // console.log('DEBUG Frontend - End:', firstRecord.end);
+            // console.log('DEBUG Frontend - Parsed start date:', new Date(firstRecord.start));
+            // console.log('DEBUG Frontend - Parsed end date:', new Date(firstRecord.end));
                 }
                 
                 const filteredData = response.data.filter(event => {
                     const eventStart = new Date(event.start);
                     const eventEnd = new Date(event.end);
                     
-                    console.log('Event dates:', eventStart, eventEnd, 'Event month:', eventStart.getMonth(), 'Event year:', eventStart.getFullYear());
+            // console.log('Event dates:', eventStart, eventEnd, 'Event month:', eventStart.getMonth(), 'Event year:', eventStart.getFullYear());
                     
                     // İzin tarihi seçili ay/yılda mı kontrol et
                     return (eventStart.getMonth() === selectedMonth && eventStart.getFullYear() === selectedYear) ||
@@ -120,18 +120,18 @@ const IzinTakvimi = () => {
                            (eventStart <= new Date(selectedYear, selectedMonth + 1, 0) && eventEnd >= new Date(selectedYear, selectedMonth, 1));
                 });
 
-                console.log('Filtered calendar data:', filteredData);
+            // console.log('Filtered calendar data:', filteredData);
                 // Onaylayan bilgisini kontrol et
                 if (filteredData.length > 0) {
-                    console.log('Sample data - onaylayanAd:', filteredData[0].onaylayanAd);
-                    console.log('Sample data - durum:', filteredData[0].durum);
-                    console.log('Full first record:', filteredData[0]);
+            // console.log('Sample data - onaylayanAd:', filteredData[0].onaylayanAd);
+            // console.log('Sample data - durum:', filteredData[0].durum);
+            // console.log('Full first record:', filteredData[0]);
                 }
                 setIzinler(filteredData);
                 setCalendarEvents(filteredData);
             }
         } catch (error) {
-            console.error('İzin takvimi loading error:', error);
+            // console.error('İzin takvimi loading error:', error);
             toast.current.show({
                 severity: 'error',
                 summary: 'Hata',

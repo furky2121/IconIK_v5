@@ -70,11 +70,11 @@ const BanaAtananEgitimler = () => {
             if (token) { // Token varsa kontrol et
                 try {
                     const payload = JSON.parse(atob(token.split('.')[1]));
-                    console.log('Token payload:', payload);
-                    console.log('Token expiry:', new Date(payload.exp * 1000));
-                    console.log('Current time:', new Date());
+            // console.log('Token payload:', payload);
+            // console.log('Token expiry:', new Date(payload.exp * 1000));
+            // console.log('Current time:', new Date());
                 } catch (e) {
-                    console.error('Token parse error:', e);
+            // console.error('Token parse error:', e);
                 }
             }
 
@@ -89,7 +89,7 @@ const BanaAtananEgitimler = () => {
                 });
             }
         } catch (error) {
-            console.error('Error loading trainings:', error);
+            // console.error('Error loading trainings:', error);
             
             // 401 hatası durumunda login sayfasına yönlendir
             if (error.message?.includes('Kullanıcı bilgisi bulunamadı') || 

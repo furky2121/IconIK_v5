@@ -1,4 +1,4 @@
-# Dependencies
+﻿# Dependencies
 node_modules/
 */node_modules/
 
@@ -66,11 +66,11 @@ backups/
 # Upload files (production'da farklı storage kullanılacak)
 wwwroot/uploads/
 uploads/
-backend/BilgeLojistikIK.API/wwwroot/uploads/
+backend/IconIK.API/wwwroot/uploads/
 
 # Keep directory structure but ignore uploaded files
 !wwwroot/uploads/.gitkeep
-!backend/BilgeLojistikIK.API/wwwroot/uploads/.gitkeep
+!backend/IconIK.API/wwwroot/uploads/.gitkeep
 
 # SSL certificates
 certificates/
@@ -80,3 +80,14 @@ certificates/
 
 # Docker
 .dockerignore
+
+# SQL files and database backups (keep only setup file)
+*.sql
+!backend/IconIK.API/SQL/IconIKdb_Setup.sql
+
+# PowerShell utility scripts
+*.ps1
+
+# Old assets and files
+bilge_lojistik.png
+*.msg

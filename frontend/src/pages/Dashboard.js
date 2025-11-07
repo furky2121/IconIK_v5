@@ -144,11 +144,10 @@ const Dashboard = () => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.data.success) {
-                console.log('Dashboard Data Loaded:', response.data.data);
                 setGenelIstatistikler(response.data.data);
             }
         } catch (error) {
-            console.error('Genel istatistikler yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -162,7 +161,7 @@ const Dashboard = () => {
                 setPersonelTrend(response.data.data);
             }
         } catch (error) {
-            console.error('Personel trend verileri yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -176,7 +175,7 @@ const Dashboard = () => {
                 setIzinTrend(response.data.data);
             }
         } catch (error) {
-            console.error('İzin trend verileri yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -190,7 +189,7 @@ const Dashboard = () => {
                 setEgitimAnaliz(response.data.data);
             }
         } catch (error) {
-            console.error('Eğitim analiz verileri yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -204,7 +203,7 @@ const Dashboard = () => {
                 setMaasAnaliz(response.data.data);
             }
         } catch (error) {
-            console.error('Maaş analiz verileri yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -215,11 +214,10 @@ const Dashboard = () => {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.data.success) {
-                console.log('Yaklaşan doğum günleri data:', response.data.data);
                 setYaklasanDogumGunleri(response.data.data);
             }
         } catch (error) {
-            console.error('Yaklaşan doğum günleri yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -233,7 +231,7 @@ const Dashboard = () => {
                 setPersonelGirisCikis(response.data.data);
             }
         } catch (error) {
-            console.error('Personel giriş-çıkış verileri yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -247,7 +245,7 @@ const Dashboard = () => {
                 setAvansTalepleri(response.data.data);
             }
         } catch (error) {
-            console.error('Avans talepleri yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -261,7 +259,7 @@ const Dashboard = () => {
                 setVideoEgitimOzet(response.data.data);
             }
         } catch (error) {
-            console.error('Video eğitim özeti yüklenemedi:', error);
+            // Silent fail
         }
     };
 
@@ -544,7 +542,7 @@ const Dashboard = () => {
             <Toast ref={toast} />
             
             <div className="dashboard-header mb-4">
-                <h1 className="text-3xl font-bold text-white m-0">BilgeLojistik İK Dashboard</h1>
+                <h1 className="text-3xl font-bold text-white m-0">Dashboard</h1>
                 <p className="text-white m-0 mt-1" style={{opacity: 0.9}}>
                     İnsan kaynakları yönetim sistemi genel bakış - 
                     <span style={{minWidth: '120px', display: 'inline-block'}}>

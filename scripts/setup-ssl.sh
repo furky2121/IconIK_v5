@@ -1,6 +1,6 @@
-#!/bin/bash
+﻿#!/bin/bash
 
-# BilgeLojistik İK SSL Certificate Setup Script
+# IconIK İK SSL Certificate Setup Script
 # Bu script SSL sertifikalarını konfigüre eder
 
 set -e
@@ -14,7 +14,7 @@ NC='\033[0m'
 CERT_DIR="./certificates"
 DOMAIN="${DOMAIN:-localhost}"
 
-echo -e "${GREEN}🔒 BilgeLojistik İK SSL Setup${NC}"
+echo -e "${GREEN}🔒 IconIK İK SSL Setup${NC}"
 
 # Sertifika dizinini oluştur
 mkdir -p $CERT_DIR
@@ -81,7 +81,7 @@ case $choice in
         openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
             -keyout "$CERT_DIR/privkey.pem" \
             -out "$CERT_DIR/fullchain.pem" \
-            -subj "/C=TR/ST=Istanbul/L=Istanbul/O=BilgeLojistik/CN=$DOMAIN"
+            -subj "/C=TR/ST=Istanbul/L=Istanbul/O=IconIK/CN=$DOMAIN"
         
         # PFX formatına çevir
         openssl pkcs12 -export \

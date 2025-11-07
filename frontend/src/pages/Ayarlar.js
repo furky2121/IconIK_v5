@@ -33,7 +33,7 @@ const Ayarlar = () => {
             if (user && user.personel && user.personel.pozisyon && user.personel.pozisyon.kademe) {
                 // Check if kademe has id property
                 if (!user.personel.pozisyon.kademe.id) {
-                    console.log('User object missing kademe.id, clearing localStorage...');
+            // console.log('User object missing kademe.id, clearing localStorage...');
                     localStorage.clear();
                     window.location.href = '/login';
                     return false;
@@ -50,7 +50,7 @@ const Ayarlar = () => {
                     // Try to load permissions but don't fail if it doesn't work
                     await yetkiService.loadUserPermissions();
                 } catch (error) {
-                    console.log('Could not load user permissions in Ayarlar page:', error.message);
+            // console.log('Could not load user permissions in Ayarlar page:', error.message);
                 }
             };
             
@@ -71,7 +71,7 @@ const Ayarlar = () => {
             setEkranYetkileri(ekranlarRes || []);
             setKademeler(kademelerRes?.data || []);
         } catch (error) {
-            console.error('LoadData Error:', error);
+            // console.error('LoadData Error:', error);
             toast.current?.show({
                 severity: 'error',
                 summary: 'Hata',
@@ -153,7 +153,7 @@ const Ayarlar = () => {
                             detail: 'Ekran yetkileri oluşturuldu'
                         });
                     } catch (screenError) {
-                        console.log('Screen permissions might already exist:', screenError.message);
+            // console.log('Screen permissions might already exist:', screenError.message);
                     }
                     
                     // Then create kademe permissions
@@ -165,7 +165,7 @@ const Ayarlar = () => {
                             detail: 'Kademe yetkileri oluşturuldu'
                         });
                     } catch (kademeError) {
-                        console.log('Kademe permissions creation error:', kademeError.message);
+            // console.log('Kademe permissions creation error:', kademeError.message);
                     }
                     
                     toast.current?.show({
@@ -176,7 +176,7 @@ const Ayarlar = () => {
 
                     await loadData();
                 } catch (error) {
-                    console.error('Default permissions error:', error);
+            // console.error('Default permissions error:', error);
                     toast.current?.show({
                         severity: 'error',
                         summary: 'Hata',

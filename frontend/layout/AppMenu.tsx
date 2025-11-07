@@ -18,7 +18,8 @@ const AppMenu = () => {
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/', screenCode: 'dashboard' },
                 { label: 'Organizasyon Şeması', icon: 'pi pi-fw pi-share-alt', to: '/organizasyon-semasi', screenCode: 'organizasyon-semasi' },
-                { label: 'Bana Atanan Eğitimler', icon: 'pi pi-fw pi-book', to: '/bana-atanan-egitimler', screenCode: 'egitimler' }
+                { label: 'Bana Atanan Eğitimler', icon: 'pi pi-fw pi-book', to: '/bana-atanan-egitimler', screenCode: 'egitimler' },
+                { label: 'Bana Atanan Anketler', icon: 'pi pi-fw pi-inbox', to: '/bana-atanan-anketler', screenCode: 'anketler' }
             ]
         },
         {
@@ -98,9 +99,55 @@ const AppMenu = () => {
             ]
         },
         {
+            label: 'BORDRO İŞLEMLERİ',
+            items: [
+                {
+                    label: 'Parametreler & Tanımlar',
+                    icon: 'pi pi-fw pi-sliders-h',
+                    items: [
+                        { label: 'Bordro Parametreleri', icon: 'pi pi-fw pi-cog', to: '/bordro-parametreleri', screenCode: 'bordro-parametreleri' },
+                        { label: 'Ödeme Tanımları', icon: 'pi pi-fw pi-plus-circle', to: '/odeme-tanimlari', screenCode: 'odeme-tanimlari' },
+                        { label: 'Kesinti Tanımları', icon: 'pi pi-fw pi-minus-circle', to: '/kesinti-tanimlari', screenCode: 'kesinti-tanimlari' }
+                    ]
+                },
+                {
+                    label: 'Puantaj İşlemleri',
+                    icon: 'pi pi-fw pi-calendar-times',
+                    items: [
+                        { label: 'Puantaj Girişi', icon: 'pi pi-fw pi-pencil', to: '/puantaj-girisi', screenCode: 'puantaj-girisi' },
+                        { label: 'Puantaj Onayı', icon: 'pi pi-fw pi-check-circle', to: '/puantaj-onayi', screenCode: 'puantaj-onayi' }
+                    ]
+                },
+                {
+                    label: 'Bordro İşlemleri',
+                    icon: 'pi pi-fw pi-money-bill',
+                    items: [
+                        { label: 'Bordro Hazırlama', icon: 'pi pi-fw pi-calculator', to: '/bordro-hazirlama', screenCode: 'bordro-hazirlama' },
+                        { label: 'Bordro Onayı', icon: 'pi pi-fw pi-verified', to: '/bordro-onayi', screenCode: 'bordro-onayi' },
+                        { label: 'Bordro Görüntüleme', icon: 'pi pi-fw pi-eye', to: '/bordro-goruntuleme', screenCode: 'bordro-goruntuleme' },
+                        { label: 'Luca Bordro Görüntüle', icon: 'pi pi-fw pi-file-pdf', to: '/luca-bordro-goruntule', screenCode: 'luca-bordro-goruntule' },
+                        { label: 'Luca Ayarları', icon: 'pi pi-fw pi-cog', to: '/luca-ayarlari', screenCode: 'luca-ayarlari' }
+                    ]
+                },
+                { label: 'Bordro Raporları', icon: 'pi pi-fw pi-chart-line', to: '/bordro-raporlari', screenCode: 'bordro-raporlari' },
+                { label: 'Bordro Dashboard', icon: 'pi pi-fw pi-chart-bar', to: '/bordro-dashboard', screenCode: 'bordro-dashboard' }
+            ]
+        },
+        {
             label: 'Sistem',
             items: [
                 { label: 'Bildirimler', icon: 'pi pi-fw pi-bell', to: '/bildirimler', screenCode: 'bildirimler' },
+                {
+                    label: 'Anket İşlemleri',
+                    icon: 'pi pi-fw pi-chart-bar',
+                    items: [
+                        { label: 'Anket Yönetimi', icon: 'pi pi-fw pi-list', to: '/anketler', screenCode: 'anketler' },
+                        { label: 'Anket Sonuçları', icon: 'pi pi-fw pi-chart-pie', to: '/anket-sonuclari', screenCode: 'anketler' }
+                    ]
+                },
+                { label: 'KVKK İzin Metni', icon: 'pi pi-fw pi-shield', to: '/kvkk-izin-metni', screenCode: 'kvkk-izin-metni' },
+                { label: 'E-Posta Ayarları', icon: 'pi pi-fw pi-envelope', to: '/e-posta-ayarlari', screenCode: 'e-posta-ayarlari' },
+                { label: 'Firma Ayarları', icon: 'pi pi-fw pi-building', to: '/firma-ayarlari', screenCode: 'firma-ayarlari' },
                 { label: 'Ayarlar', icon: 'pi pi-fw pi-cog', to: '/ayarlar', screenCode: 'ayarlar' },
                 { label: 'İzin Konfigürasyonları', icon: 'pi pi-fw pi-calendar-plus', to: '/izin-konfigurasyonlari', screenCode: 'izin-konfigurasyonlari' }
             ]
@@ -109,13 +156,10 @@ const AppMenu = () => {
 
     useEffect(() => {
         // Load user permissions when component mounts
-        yetkiService.loadUserPermissions().then((permissions) => {
-            console.log('AppMenu - Loaded permissions:', permissions?.length || 0, 'items');
+        yetkiService.loadUserPermissions().then(() => {
             const filtered = filterMenuByPermissions(fullModel);
-            console.log('AppMenu - Filtered menu items:', filtered.length, 'main sections');
             setFilteredModel(filtered);
-        }).catch((error) => {
-            console.warn('AppMenu - Permission loading failed, showing full menu:', error.message);
+        }).catch(() => {
             // If permission loading fails, show basic menu
             setFilteredModel(fullModel);
         });
@@ -139,7 +183,6 @@ const AppMenu = () => {
             } else if (item.screenCode) {
                 // Check if user has permission for this screen
                 const hasPermission = yetkiService.hasScreenPermission(item.screenCode, 'read');
-                console.log(`AppMenu - Permission check: ${item.screenCode} = ${hasPermission}`);
                 return hasPermission ? filteredItem : null;
             } else {
                 // No screenCode, allow by default

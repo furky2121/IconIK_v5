@@ -1,6 +1,6 @@
-#!/bin/bash
+﻿#!/bin/bash
 
-# BilgeLojistik İK Database Backup Script
+# IconIK İK Database Backup Script
 # Bu script PostgreSQL veritabanının yedeğini alır
 
 set -e
@@ -8,7 +8,7 @@ set -e
 # Konfigürasyon
 BACKUP_DIR="./backups"
 DATE=$(date +%Y%m%d_%H%M%S)
-DB_NAME="${DB_NAME:-BilgeLojistikIKdb}"
+DB_NAME="${DB_NAME:-IconIKdb}"
 DB_USER="${DB_USER:-bilgeik}"
 BACKUP_FILE="$BACKUP_DIR/bilgeik_backup_$DATE.sql"
 
@@ -18,7 +18,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo -e "${GREEN}🗄️  BilgeLojistik İK Database Backup${NC}"
+echo -e "${GREEN}🗄️  IconIK İK Database Backup${NC}"
 
 # Backup dizinini oluştur
 mkdir -p $BACKUP_DIR

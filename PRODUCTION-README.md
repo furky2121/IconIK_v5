@@ -1,6 +1,6 @@
-# 🚀 BilgeLojistik İK Yönetim Sistemi - Production Deployment Guide
+﻿# 🚀 IconIK İK Yönetim Sistemi - Production Deployment Guide
 
-Bu rehber, BilgeLojistik İK Yönetim Sistemi'ni production ortamına deploy etmek için gerekli tüm adımları içerir.
+Bu rehber, IconIK İK Yönetim Sistemi'ni production ortamına deploy etmek için gerekli tüm adımları içerir.
 
 ## 📋 Sistem Gereksinimleri
 
@@ -30,7 +30,7 @@ Bu rehber, BilgeLojistik İK Yönetim Sistemi'ni production ortamına deploy etm
 ### 1. Projeyi İndirin
 ```bash
 git clone <repository-url>
-cd BilgeLojistik-IK
+cd IconIK-IK
 ```
 
 ### 2. Environment Ayarları
@@ -52,7 +52,7 @@ chmod +x scripts/*.sh
 ```bash
 # Database Configuration
 DB_HOST=postgres
-DB_NAME=BilgeLojistikIKdb
+DB_NAME=IconIKdb
 DB_USER=bilgeik
 DB_PASSWORD=GÜÇLÜ_ŞİFRE_BURAYA
 DB_PORT=5432
@@ -226,7 +226,7 @@ docker-compose exec postgres pg_isready
 docker-compose logs postgres
 
 # Database'e manuel bağlan
-docker-compose exec postgres psql -U bilgeik -d BilgeLojistikIKdb
+docker-compose exec postgres psql -U bilgeik -d IconIKdb
 ```
 
 #### SSL Sertifika Problemleri

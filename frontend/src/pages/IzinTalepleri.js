@@ -17,10 +17,12 @@ import { Divider } from 'primereact/divider';
 import { Message } from 'primereact/message';
 import { Panel } from 'primereact/panel';
 import { Chip } from 'primereact/chip';
+import { FileUpload } from 'primereact/fileupload';
 import izinService from '../services/izinService';
 import fileUploadService from '../services/fileUploadService';
 import authService from '../services/authService';
 import yetkiService from '../services/yetkiService';
+import izinKonfigurasyonService from '../services/izinKonfigurasyonService';
 
 const IzinTalepleri = () => {
     const [izinTalepleri, setIzinTalepleri] = useState([]);
@@ -46,6 +48,8 @@ const IzinTalepleri = () => {
     const [loading, setLoading] = useState(false);
     const [izinOzeti, setIzinOzeti] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
+    const [izinTipleri, setIzinTipleri] = useState([]);
+    const [uploadedRapor, setUploadedRapor] = useState(null);
     // Permission states
     const [permissions, setPermissions] = useState({
         read: false,
@@ -53,26 +57,65 @@ const IzinTalepleri = () => {
         delete: false,
         update: false
     });
-    
+
     const toast = useRef(null);
     const dt = useRef(null);
-
-    const izinTipleri = [
-        { label: 'Yıllık İzin', value: 'Yıllık İzin' },
-        { label: 'Mazeret İzni', value: 'Mazeret İzni' },
-        { label: 'Hastalık İzni', value: 'Hastalık İzni' },
-        { label: 'Doğum İzni', value: 'Doğum İzni' },
-        { label: 'Ücretsiz İzin', value: 'Ücretsiz İzin' },
-        { label: 'Dış Görev', value: 'Dış Görev' },
-        { label: 'Diğer', value: 'Diğer' }
-    ];
 
     useEffect(() => {
         const user = authService.getUser();
         setCurrentUser(user);
         loadData();
         loadPermissions();
+        loadIzinTipleri();
     }, []);
+
+    const loadIzinTipleri = async () => {
+        try {
+            const user = authService.getUser();
+            let response;
+
+            // Cinsiyet bilgisi varsa, cinsiyet bazlı filtreleme yap
+            if (user && user.personel && user.personel.cinsiyet) {
+                response = await izinKonfigurasyonService.getIzinTipleriByGender(user.personel.cinsiyet);
+            } else {
+                // Cinsiyet bilgisi yoksa tüm aktif izin tiplerini getir
+                response = await izinKonfigurasyonService.getAktifIzinTipleri();
+            }
+
+            if (response.success) {
+                // Personelin izin özetini al (toplamHak için)
+                const izinOzetiResponse = await izinService.getPersonelIzinOzeti(user.personel.id);
+                const toplamHak = izinOzetiResponse.success ? izinOzetiResponse.data.toplamHak : null;
+
+                // Transform API data to dropdown format
+                const dropdownOptions = response.data.map(tip => {
+                    const maksimum = tip.izinTipiAdi === 'Yıllık İzin' ? toplamHak : tip.maksimumGunSayisi;
+
+                    return {
+                        label: tip.izinTipiAdi,
+                        value: tip.izinTipiAdi,
+                        minimumGunSayisi: tip.minimumGunSayisi,
+                        // Yıllık İzin için maksimum = personelin toplam hakkı
+                        maksimumGunSayisi: maksimum,
+                        raporGerekli: tip.raporGerekli
+                    };
+                });
+                setIzinTipleri(dropdownOptions);
+            }
+        } catch (error) {
+            console.error('İzin tipleri yüklenirken hata:', error);
+            // Fallback to default values if API fails
+            setIzinTipleri([
+                { label: 'Yıllık İzin', value: 'Yıllık İzin' },
+                { label: 'Mazeret İzni', value: 'Mazeret İzni' },
+                { label: 'Hastalık İzni', value: 'Hastalık İzni' },
+                { label: 'Doğum İzni', value: 'Doğum İzni' },
+                { label: 'Ücretsiz İzin', value: 'Ücretsiz İzin' },
+                { label: 'Dış Görev', value: 'Dış Görev' },
+                { label: 'Diğer', value: 'Diğer' }
+            ]);
+        }
+    };
 
     const loadPermissions = async () => {
         try {
@@ -84,7 +127,7 @@ const IzinTalepleri = () => {
                 update: yetkiService.hasScreenPermission('izin-talepleri', 'update')
             });
         } catch (error) {
-            console.error('Permission loading error:', error);
+            // console.error('Permission loading error:', error);
             // If permission loading fails, deny all permissions for safety
             setPermissions({
                 read: false,
@@ -138,7 +181,7 @@ const IzinTalepleri = () => {
                 setIzinOzeti(response.data);
             }
         } catch (error) {
-            console.error('İzin özeti yüklenirken hata:', error);
+            // console.error('İzin özeti yüklenirken hata:', error);
         }
     };
 
@@ -155,6 +198,7 @@ const IzinTalepleri = () => {
             izinTipi: 'Yıllık İzin',
             aciklama: ''
         });
+        setUploadedRapor(null);
         setSubmitted(false);
         setIzinDialog(true);
     };
@@ -173,6 +217,28 @@ const IzinTalepleri = () => {
     const saveIzinTalebi = async () => {
         setSubmitted(true);
 
+        // Tarih kontrolü - önce tarihlerin seçilmiş olması gerekir
+        if (!izinTalebi.izinBaslamaTarihi || !izinTalebi.isbasiTarihi) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Hata',
+                detail: 'İzin başlama ve işbaşı tarihlerini seçmelisiniz.',
+                life: 3000
+            });
+            return;
+        }
+
+        // Gün sayısı kontrolü - 0 veya negatif olamaz
+        if (!izinTalebi.gunSayisi || izinTalebi.gunSayisi <= 0) {
+            toast.current.show({
+                severity: 'error',
+                summary: 'Hata',
+                detail: 'İzin talebi en az 1 iş günü olmalıdır. Lütfen tarihleri kontrol edin.',
+                life: 3000
+            });
+            return;
+        }
+
         // Dış Görev için görev yeri validasyonu
         if (izinTalebi.izinTipi === 'Dış Görev' && !izinTalebi.gorevYeri) {
             toast.current.show({
@@ -184,18 +250,99 @@ const IzinTalepleri = () => {
             return;
         }
 
-        if (izinTalebi.izinBaslamaTarihi && izinTalebi.isbasiTarihi && 
+        // İzin tipi min/max gün sayısı ve rapor kontrolü
+        const selectedIzinTipi = izinTipleri.find(tip => tip.value === izinTalebi.izinTipi);
+
+        if (selectedIzinTipi) {
+            // Minimum gün kontrolü
+            if (selectedIzinTipi.minimumGunSayisi &&
+                selectedIzinTipi.minimumGunSayisi > 0 &&
+                izinTalebi.gunSayisi < selectedIzinTipi.minimumGunSayisi) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Hata',
+                    detail: `${izinTalebi.izinTipi} için minimum ${selectedIzinTipi.minimumGunSayisi} gün talep etmelisiniz.`,
+                    life: 3000
+                });
+                return;
+            }
+
+            // Maksimum gün kontrolü (0'dan büyük herhangi bir değer varsa kontrol yap)
+            if (selectedIzinTipi.maksimumGunSayisi &&
+                selectedIzinTipi.maksimumGunSayisi > 0 &&
+                izinTalebi.gunSayisi > selectedIzinTipi.maksimumGunSayisi) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Hata',
+                    detail: `${izinTalebi.izinTipi} için maksimum ${selectedIzinTipi.maksimumGunSayisi} gün talep edebilirsiniz. Girilen gün: ${izinTalebi.gunSayisi}`,
+                    life: 5000
+                });
+                return;
+            }
+
+            // Rapor gereklilik kontrolü
+            if (selectedIzinTipi.raporGerekli && !uploadedRapor) {
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Hata',
+                    detail: `${izinTalebi.izinTipi} için rapor yüklemeniz gerekmektedir.`,
+                    life: 3000
+                });
+                return;
+            }
+        } else {
+            // İzin tipi bulunamadı hatası
+            toast.current.show({
+                severity: 'error',
+                summary: 'Hata',
+                detail: 'İzin tipi bilgisi bulunamadı. Lütfen sayfayı yenileyip tekrar deneyin.',
+                life: 3000
+            });
+            return;
+        }
+
+        if (izinTalebi.izinBaslamaTarihi && izinTalebi.isbasiTarihi &&
             izinTalebi.izinBaslamaTarihi < izinTalebi.isbasiTarihi) {
-            
+
             try {
                 let response;
                 if (izinTalebi.id) {
                     response = await izinService.updateIzinTalebi(izinTalebi.id, izinTalebi);
                 } else {
-                    response = await izinService.createIzinTalebi(izinTalebi);
+                    // Debug: Rapor bilgilerini kontrol et
+                    console.log('DEBUG - uploadedRapor:', uploadedRapor);
+                    console.log('DEBUG - raporYuklenecek:', uploadedRapor != null);
+                    console.log('DEBUG - izinTalebi.izinTipi:', izinTalebi.izinTipi);
+
+                    // Rapor yüklenecek mi bilgisini backend'e gönder
+                    const talepData = {
+                        ...izinTalebi,
+                        raporYuklenecek: uploadedRapor != null
+                    };
+
+                    console.log('DEBUG - Backend\'e gönderilen data:', talepData);
+                    response = await izinService.createIzinTalebi(talepData);
+                    console.log('DEBUG - Backend response:', response);
                 }
 
                 if (response.success) {
+                    // Rapor yükleme işlemi (izin talebi oluşturulduktan sonra)
+                    if (uploadedRapor && response.data && response.data.id) {
+                        try {
+                            const uploadResponse = await izinService.uploadRapor(response.data.id, uploadedRapor);
+                            if (!uploadResponse.success) {
+                                toast.current.show({
+                                    severity: 'warn',
+                                    summary: 'Uyarı',
+                                    detail: 'İzin talebi oluşturuldu ancak rapor yüklenemedi.',
+                                    life: 3000
+                                });
+                            }
+                        } catch (uploadError) {
+                            console.error('Rapor yükleme hatası:', uploadError);
+                        }
+                    }
+
                     toast.current.show({
                         severity: 'success',
                         summary: 'Başarılı',
@@ -204,13 +351,23 @@ const IzinTalepleri = () => {
                     });
                     loadData();
                     setIzinDialog(false);
+                } else {
+                    // Backend'den success=false gelirse
+                    console.error('DEBUG - Backend hatası:', response.message);
+                    toast.current.show({
+                        severity: 'error',
+                        summary: 'Hata',
+                        detail: response.message,
+                        life: 5000
+                    });
                 }
             } catch (error) {
+                console.error('DEBUG - Exception:', error);
                 toast.current.show({
                     severity: 'error',
                     summary: 'Hata',
                     detail: error.message,
-                    life: 3000
+                    life: 5000
                 });
             }
         }
@@ -297,12 +454,14 @@ const IzinTalepleri = () => {
         }
     };
 
-    const calculateGunSayisi = () => {
-        if (izinTalebi.izinBaslamaTarihi && izinTalebi.isbasiTarihi) {
-            const start = new Date(izinTalebi.izinBaslamaTarihi);
-            const end = new Date(izinTalebi.isbasiTarihi);
+    const calculateGunSayisi = (talebi) => {
+        const _izinTalebi = talebi || izinTalebi;
+
+        if (_izinTalebi.izinBaslamaTarihi && _izinTalebi.isbasiTarihi) {
+            const start = new Date(_izinTalebi.izinBaslamaTarihi);
+            const end = new Date(_izinTalebi.isbasiTarihi);
             let gunSayisi = 0;
-            
+
             // İzin başlama ve işbaşı tarihleri arasındaki tüm günleri hesapla (işbaşı günü hariç)
             const current = new Date(start);
             while (current < end) { // İşbaşı tarihi dahil değil
@@ -310,7 +469,7 @@ const IzinTalepleri = () => {
                     // Bu gün tam izin günü mü yoksa yarım mı?
                     if (current.getTime() === start.getTime()) {
                         // İzin başlama günü
-                        const izinSaat = parseInt(izinTalebi.izinBaslamaSaati.split(':')[0]);
+                        const izinSaat = parseInt(_izinTalebi.izinBaslamaSaati?.split(':')[0] || '8');
                         gunSayisi += izinSaat >= 13 ? 0.5 : 1;
                     } else {
                         // Ara günler tam gün izin
@@ -319,9 +478,11 @@ const IzinTalepleri = () => {
                 }
                 current.setDate(current.getDate() + 1);
             }
-            
-            setIzinTalebi({ ...izinTalebi, gunSayisi });
+
+            return gunSayisi;
         }
+
+        return 0;
     };
 
     const onInputChange = (e, name) => {
@@ -335,10 +496,14 @@ const IzinTalepleri = () => {
         const val = e.value;
         let _izinTalebi = { ...izinTalebi };
         _izinTalebi[`${name}`] = val;
+
+        // Her iki tarih de doluysa gün sayısını hemen hesapla
+        if (_izinTalebi.izinBaslamaTarihi && _izinTalebi.isbasiTarihi) {
+            const hesaplananGun = calculateGunSayisi(_izinTalebi);
+            _izinTalebi.gunSayisi = hesaplananGun;
+        }
+
         setIzinTalebi(_izinTalebi);
-        
-        // Tarih değiştiğinde gün sayısını hesapla
-        setTimeout(() => calculateGunSayisi(), 100);
     };
 
     const leftToolbarTemplate = () => {
@@ -743,6 +908,35 @@ const IzinTalepleri = () => {
                     </div>
                 )}
 
+                {/* İzin tipi kuralları bilgilendirmesi */}
+                {(() => {
+                    const selectedIzinTipi = izinTipleri.find(tip => tip.value === izinTalebi.izinTipi);
+                    if (!selectedIzinTipi) return null;
+
+                    const rules = [];
+                    if (selectedIzinTipi.minimumGunSayisi) {
+                        rules.push(`Minimum ${selectedIzinTipi.minimumGunSayisi} gün`);
+                    }
+                    if (selectedIzinTipi.maksimumGunSayisi) {
+                        rules.push(`Maksimum ${selectedIzinTipi.maksimumGunSayisi} gün`);
+                    }
+                    if (selectedIzinTipi.raporGerekli) {
+                        rules.push('Rapor gereklidir');
+                    }
+
+                    if (rules.length > 0) {
+                        return (
+                            <div className="p-field">
+                                <Message
+                                    severity="warn"
+                                    text={`${izinTalebi.izinTipi} Kuralları: ${rules.join(', ')}`}
+                                />
+                            </div>
+                        );
+                    }
+                    return null;
+                })()}
+
                 {izinTalebi.izinTipi === 'Dış Görev' && (
                     <div className="p-field">
                         <label htmlFor="gorevYeri">Görev Yeri *</label>
@@ -757,6 +951,49 @@ const IzinTalepleri = () => {
                         )}
                     </div>
                 )}
+
+                {/* Rapor Yükleme (Şartlı) */}
+                {(() => {
+                    const selectedIzinTipi = izinTipleri.find(tip => tip.value === izinTalebi.izinTipi);
+                    if (selectedIzinTipi && selectedIzinTipi.raporGerekli) {
+                        return (
+                            <div className="p-field">
+                                <label htmlFor="rapor">Rapor Yükle *</label>
+                                <FileUpload
+                                    mode="basic"
+                                    name="rapor"
+                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                    maxFileSize={10000000}
+                                    chooseLabel={uploadedRapor ? uploadedRapor.name : "Rapor Seç"}
+                                    className={submitted && !uploadedRapor ? 'p-invalid' : ''}
+                                    onSelect={(e) => {
+                                        if (e.files && e.files.length > 0) {
+                                            setUploadedRapor(e.files[0]);
+                                            toast.current.show({
+                                                severity: 'success',
+                                                summary: 'Başarılı',
+                                                detail: 'Rapor seçildi: ' + e.files[0].name,
+                                                life: 3000
+                                            });
+                                        }
+                                    }}
+                                />
+                                {uploadedRapor && (
+                                    <div className="p-mt-2">
+                                        <small className="p-text-success">
+                                            <i className="pi pi-check-circle mr-2"></i>
+                                            Seçilen dosya: {uploadedRapor.name}
+                                        </small>
+                                    </div>
+                                )}
+                                {submitted && !uploadedRapor && (
+                                    <small className="p-error">Rapor yüklemeniz gerekmektedir.</small>
+                                )}
+                            </div>
+                        );
+                    }
+                    return null;
+                })()}
 
                 <div className="p-field">
                     <label htmlFor="aciklama">İzin Açıklama</label>
