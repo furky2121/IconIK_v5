@@ -21,9 +21,9 @@
       - key: JWT_AUDIENCE
         value: IconIKIK-Users
       - key: FRONTEND_URL
-        value: http://localhost:3000
+        value: https://iconik.vercel.app
       - key: ADDITIONAL_CORS_ORIGINS
-        value: https://localhost:3001
+        value: https://iconik.vercel.app
 
 # PostgreSQL database
 databases:
