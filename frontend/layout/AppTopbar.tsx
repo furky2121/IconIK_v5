@@ -146,7 +146,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: '1rem' }}>
                     {firmaAyarlari.logoUrl && (
                         <img
-                            src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}${firmaAyarlari.logoUrl}`}
+                            src={`${process.env.NEXT_PUBLIC_FILE_BASE_URL || 'http://localhost:5000'}${firmaAyarlari.logoUrl}`}
                             alt="Firma Logosu"
                             style={{ height: '40px', width: 'auto', objectFit: 'contain' }}
                         />
