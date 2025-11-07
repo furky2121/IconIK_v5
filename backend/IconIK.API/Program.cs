@@ -62,7 +62,7 @@ if (!string.IsNullOrEmpty(databaseUrl))
     var userInfo = databaseUri.UserInfo.Split(':');
     var port = databaseUri.Port > 0 ? databaseUri.Port : 5432; // Default PostgreSQL port
 
-    connectionString = $"Host={databaseUri.Host};Port={port};Database={databaseUri.LocalPath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    connectionString = $"Host={databaseUri.Host};Port={port};Database={databaseUri.LocalPath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true;Encoding=UTF8";
 }
 
 builder.Services.AddDbContext<IconIKContext>(options =>
