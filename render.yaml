@@ -11,7 +11,9 @@
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
       - key: DATABASE_URL
-        value: postgresql://iconik:TsJdy3RZ5hRi56b78LE8b20uJdR37RRo@dpg-d46uala4d50c7394inlg-a.frankfurt-postgres.render.com/iconikdb
+        fromDatabase:
+          name: IconIK-db
+          property: connectionString
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: JWT_ISSUER
@@ -23,9 +25,9 @@
       - key: ADDITIONAL_CORS_ORIGINS
         value: https://localhost:3001
 
-# PostgreSQL database - Commented out (already created manually)
-# databases:
-#   - name: IconIK-db
-#     databaseName: iconikdb
-#     user: iconik
-#     plan: free
+# PostgreSQL database
+databases:
+  - name: IconIK-db
+    databaseName: iconikdb
+    user: iconik
+    plan: free
